@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="34px" height="34px" viewBox="0 0 34 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>play-circle-fill</title>
+    <defs>
+        <polygon id="path-1" points="0 0 930 0 930 200 0 200 0 59 0 31 0 14"></polygon>
+        <filter x="-0.1%" y="-0.2%" width="100.1%" height="101.0%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feColorMatrix values="0 0 0 0 0.874509804   0 0 0 0 0.88627451   0 0 0 0 0.898039216  0 0 0 1 0" type="matrix" in="shadowOffsetOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#229FFB" offset="0%"></stop>
+            <stop stop-color="#028FEE" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Conversation-Intelligence" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="top" transform="translate(-55.000000, -13.000000)">
+            <g id="box">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use fill="#FAFBFC" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+            <g id="controls-&amp;-actions">
+                <rect id="box-light-gray" fill="#EFF3F6" x="0" y="0" width="931" height="59"></rect>
+                <g id="audio-controls" transform="translate(25.000000, 13.000000)" fill="url(#linearGradient-3)" stroke="#028BE6">
+                    <path d="M47,0.5 C51.5375,0.5 55.6621816,2.35678833 58.6526966,5.34730339 C61.6432117,8.33781845 63.5,12.4625 63.5,17 C63.5,21.5375 61.6432117,25.6621816 58.6526966,28.6526966 C55.6621816,31.6432117 51.5375,33.5 47,33.5 C42.4625,33.5 38.3378184,31.6432117 35.3473034,28.6526966 C32.3567883,25.6621816 30.5,21.5375 30.5,17 C30.5,12.4625 32.3567883,8.33781845 35.3473034,5.34730339 C38.3378184,2.35678833 42.4625,0.5 47,0.5 Z M43.5,7.95968758 L43.5,24.9603278 L54.8337601,17.0266957 L43.5,7.95968758 Z" id="play-circle-fill"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

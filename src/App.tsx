@@ -1,25 +1,50 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import './App.scss';
+import ControlBar from './ControlBar/ControlBar';
+import Transcript from './Transcript/Transcript';
+import WeaveForms from './WeaveForms/WeaveForms';
+import { getTranscript } from './Transcript/TranscriptService';
+import { useAudio } from 'react-use';
 
 function App() {
+  const transcript = getTranscript();
+  const [audio, audioState, audioControls] = useAudio({
+    src: './59e106639d79684277df770d.wav',
+    autoPlay: false,
+  });
+
+  // const audio2 = new Audio("./59e106639d79684277df770d.wav")
+  //   // audio2.ontimeupdate = (event) => {
+  //   //   updateCurrentTime(audio2.currentTime);
+  //   // };
+  //
+  //
+  //   setTimeout(() => {
+  //     audio2.play();
+  // }, 1000)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <ControlBar
+        play={audioControls.play}
+        pause={audioControls.pause}
+        audioState={audioState}
+      />
+      <div className={'p-4'}>
+        {audioState.time * 1000}
+        <WeaveForms
+          wordTimings={transcript.wordTimings[0]}
+          currentTimeMs={audioState.time * 1000}
+          durationMs={audioState.duration * 1000}
+        />
+      </div>
+      <Transcript
+        transcript={transcript}
+        seekAudioTime={audioControls.seek}
+        currentTimeMs={audioState.time * 1000}
+      />
+      {audio}
+    </>
   );
 }
 

@@ -1,3 +1,11 @@
+# todo:
+- add prettier
+- add / remove tests
+- check style variables
+- remove unused tailwind styles
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
