@@ -28,7 +28,7 @@ function getNoiseMarkers(
   weaveDuration: number,
   durationMs: number,
 ): Array<[string, number]> {
-  if (!weaveDuration) return [];
+  if (!weaveDuration || !wordTimings) return [];
 
   const noiseBars = wordTimings.reduce((noiseMarkers, wordTiming) => {
     return {
@@ -45,9 +45,9 @@ function WeaveForms({
   durationMs,
   currentTimeMs,
 }: {
-  wordTimings: WordTiming[];
-  currentTimeMs: number;
-  durationMs: number;
+  wordTimings: WordTiming[] | any;
+  currentTimeMs: number | any;
+  durationMs: number | any; // TODO [P. Labus] find all anys 
 }) {
   const containerWidthPx = 900;
   const weaveBarHeightPx = 60;

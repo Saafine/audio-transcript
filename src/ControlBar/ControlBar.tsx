@@ -8,16 +8,16 @@ import { ReactComponent as Play } from './play.svg';
 interface ControlBarProps {
   play: () => Promise<void> | void;
   pause: () => void;
-  audioState: any; // TODO [P. Labus] type?
+  paused: boolean;
 }
 
-function ControlBar({ play, pause, audioState }: ControlBarProps) {
+function ControlBar({ play, pause, paused }: ControlBarProps) {
   return (
     <nav className={'flex items-center justify-between py-3 px-5'}>
       <div className={'flex items-center'}>
         <Rewind />
-        {audioState.paused ? <Play onClick={play} /> : null}
-        {!audioState.paused ? <Pause onClick={pause} /> : null}
+        {paused ? <Play onClick={play} /> : null}
+        {!paused ? <Pause onClick={pause} /> : null}
         <FastForward />
         <button className={'btn btn-secondary'}>1.0x</button>
       </div>

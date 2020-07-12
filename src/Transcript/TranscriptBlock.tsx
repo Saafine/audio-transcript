@@ -19,7 +19,7 @@ function TranscriptBlock({
     <div>
       {wordTimings.map(({ word, startTimeMs, endTimeMs }, index) => (
         <span
-          onClick={() => seekAudioTime(startTimeMs / 1000)}
+          onClick={() => seekAudioTime(startTimeMs)}
           className={
             shouldHighlight(startTimeMs, endTimeMs) ? 'highlight' : undefined
           }
