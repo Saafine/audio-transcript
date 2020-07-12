@@ -173,6 +173,22 @@ function Timeline({
   );
 }
 
+export function TimelineSimple() {
+  return (
+    <div
+      style={{
+        background: '#DFE2E5',
+        width: '100%',
+        height: '1px',
+        position: 'absolute',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        left: 0,
+      }}
+    ></div>
+  );
+}
+
 function WeaveForms({
   wordTimingsOfPersonA = [],
   wordTimingsOfPersonB = [],
@@ -222,7 +238,7 @@ function WeaveForms({
     <div className={'flex p-2'} style={{ background: '#FAFBFC' }}>
       <div className={'relative'}>
         <div
-          className={'flex items-center my-2'}
+          className={'flex items-center my-2 mr-4 font-bold'}
           style={{
             color: AUDIO_TRANSCRIBE_COLOR_PRIMARY,
             height: WEAVE_BAR_HEIGHT_PX,
@@ -231,20 +247,10 @@ function WeaveForms({
           54 % YOU
         </div>
 
-        <div
-          style={{
-            background: '#DFE2E5',
-            width: '100%',
-            height: '1px',
-            position: 'absolute',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            left: 0,
-          }}
-        ></div>
+        <TimelineSimple />
 
         <div
-          className={'flex items-center my-2'}
+          className={'flex items-center my-2 mr-4 font-bold'}
           style={{
             color: AUDIO_TRANSCRIBE_COLOR_SECONDARY,
             height: WEAVE_BAR_HEIGHT_PX,

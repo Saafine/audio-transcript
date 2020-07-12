@@ -1,6 +1,6 @@
 export const WEAVE_BAR_CONTAINER_WIDTH_PX = 900;
 export const WEAVE_BAR_HEIGHT_PX = 40;
-export const WEAVE_BAR_WIDTH_PX = 2;
+export const WEAVE_BAR_WIDTH_PX = 3;
 export const WEAVE_BAR_SPACE_BETWEEN_PX = 1;
 export const AUDIO_TRANSCRIBE_COLOR_PRIMARY = '#8868E9';
 export const AUDIO_TRANSCRIBE_COLOR_SECONDARY = '#4CA3F0';

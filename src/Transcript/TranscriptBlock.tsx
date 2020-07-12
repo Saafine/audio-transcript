@@ -1,5 +1,5 @@
 import React from 'react';
-import './Transcript.scss';
+import './TranscriptBlock.scss';
 import { WordTiming } from '../core';
 
 function TranscriptBlock({
@@ -21,21 +21,23 @@ function TranscriptBlock({
     <div className={'flex'}>
       <div
         className={'font-semibold pr-3'}
-        style={{ color, borderRight: `1px solid ${color}` }}
+        style={{ color, borderRight: `3px solid ${color}` }}
       >
         03:25
       </div>
-      <div className={'pl-3'} style={{ maxWidth: '450px' }}>
+      <div className={'pl-3'} style={{ maxWidth: '650px' }}>
         {wordTimings.map(({ word, startTimeMs, endTimeMs }, index) => (
-          <span
-            onClick={() => seekAudioTime(startTimeMs)}
-            className={
-              shouldHighlight(startTimeMs, endTimeMs) ? 'highlight' : undefined
-            }
-            key={index}
-          >
-            {word + ' '}
-          </span>
+          <React.Fragment key={index}>
+            <span
+              onClick={() => seekAudioTime(startTimeMs)}
+              className={
+                shouldHighlight(startTimeMs, endTimeMs) ? 'highlight' : ''
+              }
+            >
+              {word + ' '}
+            </span>
+            &#32;
+          </React.Fragment>
         ))}
       </div>
     </div>

@@ -1,7 +1,10 @@
 .transcript-block {
   margin: 20px 20px;
+  color: #71859A;
+  font-weight: 600;
 
   &:nth-child(even) {
     margin-left: 60px;
+    color: #4F5769;
   }
 }

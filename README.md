@@ -1,8 +1,7 @@
 # todo:
-- add prettier
+- is every css global ?
 - add / remove tests
 - check style variables
-- remove unused tailwind styles
 
 
 

@@ -8,8 +8,8 @@ import Transcript from './Transcript/Transcript';
 
 function App() {
   const audioRef = React.useRef(new Audio('./59e106639d79684277df770d.wav'));
-  const requestRef = React.useRef<number>();
-  const previousTimeRef = React.useRef<number>();
+  const requestRef = React.useRef<number | undefined>();
+  const previousTimeRef = React.useRef<number | undefined>();
 
   useEffect(() => {
     // Line 18:6:  React Hook useEffect has missing dependencies: 'pause' and 'updateAudioState'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
@@ -36,7 +36,7 @@ function App() {
 
   const pause = () => {
     audioRef.current.pause();
-    cancelAnimationFrame(requestRef.current as any);
+    cancelAnimationFrame(requestRef.current as number);
     updateAudioState();
   };
 
@@ -49,7 +49,7 @@ function App() {
       updateAudioState();
     }
     previousTimeRef.current = time;
-    requestRef.current = requestAnimationFrame(animate) as any;
+    requestRef.current = requestAnimationFrame(animate);
   };
 
   const updateAudioState = () => {
@@ -65,7 +65,7 @@ function App() {
     <>
       <ControlBar play={play} pause={pause} paused={audio.paused} />
       <WeaveForms
-          seek={seek}
+        seek={seek}
         wordTimingsOfPersonA={transcript.wordTimings[0]}
         wordTimingsOfPersonB={transcript.wordTimings[1]}
         currentTimeMs={audio.currentTimeMs}
