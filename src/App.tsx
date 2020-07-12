@@ -12,8 +12,11 @@ function App() {
   const previousTimeRef = React.useRef<number>();
 
   useEffect(() => {
-    audioRef.current.addEventListener('canplay', updateAudioState)
-  }, [])
+    // Line 18:6:  React Hook useEffect has missing dependencies: 'pause' and 'updateAudioState'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+    audioRef.current.addEventListener('canplay', updateAudioState);
+    audioRef.current.addEventListener('ended', pause);
+    setTranscript(getTranscript());
+  }, []);
 
   const [transcript, setTranscript] = useState<TranscriptModel>({
     wordTimings: [],
@@ -39,7 +42,6 @@ function App() {
 
   const seek = (timeMs: number) => {
     audioRef.current.currentTime = timeMs / 1000;
-    updateAudioState();
   };
 
   const animate = (time: number) => {
@@ -59,19 +61,16 @@ function App() {
     });
   };
 
-  useEffect(() => {
-    setTranscript(getTranscript());
-  }, []);
-
   return (
     <>
       <ControlBar play={play} pause={pause} paused={audio.paused} />
-        <WeaveForms
-          wordTimingsOfPersonA={transcript.wordTimings[0]}
-          wordTimingsOfPersonB={transcript.wordTimings[1]}
-          currentTimeMs={audio.currentTimeMs}
-          durationMs={audio.durationMs}
-        />
+      <WeaveForms
+          seek={seek}
+        wordTimingsOfPersonA={transcript.wordTimings[0]}
+        wordTimingsOfPersonB={transcript.wordTimings[1]}
+        currentTimeMs={audio.currentTimeMs}
+        durationMs={audio.durationMs}
+      />
       <Transcript
         transcript={transcript}
         seekAudioTime={seek}

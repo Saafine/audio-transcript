@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { MouseEventHandler, useEffect, useState } from 'react';
 import { WordTiming } from '../core';
 import WeaveProgress from './WeaveProgress';
 
@@ -121,7 +121,7 @@ function Timeline({
       <div
         style={{
           height: '10px',
-          width: '1px',
+          width: '2px',
           left: 0,
           top: '50%',
           position: 'absolute',
@@ -153,7 +153,7 @@ function Timeline({
       <div
         style={{
           height: '10px',
-          width: '1px',
+          width: '2px',
           right: 0,
           top: '50%',
           position: 'absolute',
@@ -170,11 +170,13 @@ function WeaveForms({
   wordTimingsOfPersonB = [],
   durationMs,
   currentTimeMs,
+  seek,
 }: {
   wordTimingsOfPersonA: WordTiming[];
   wordTimingsOfPersonB: WordTiming[];
   currentTimeMs: number;
   durationMs: number;
+  seek: (timeMs: number) => void;
 }) {
   // UI Options
   const containerWidthPx = 900;
@@ -189,7 +191,8 @@ function WeaveForms({
     containerWidthPx / (weaveBarWidthPx + 2 * spaceBetweenBarsPx),
   );
   const weaveDuration = Math.floor(durationMs / weaveBarCount);
-  const progressPosition = (currentTimeMs / durationMs) * containerWidthPx || 0;
+  const progressPositionPx =
+    (currentTimeMs / durationMs) * containerWidthPx || 0;
 
   const [noiseMarkersForPersonA, setNoiseMarkersForPersonA] = useState<
     number[]
@@ -206,6 +209,13 @@ function WeaveForms({
       getNoiseMarkers(wordTimingsOfPersonB, weaveDuration),
     );
   }, [wordTimingsOfPersonA, wordTimingsOfPersonB, weaveDuration]);
+
+  const seekOnWeaveForm = (event: any) => {
+    const start = event.currentTarget.getBoundingClientRect().x;
+    const clicked = event.clientX;
+    const diff = ((clicked - start) / containerWidthPx) * durationMs;
+    seek(diff);
+  };
 
   return (
     <div className={'flex p-2'} style={{ background: '#FAFBFC' }}>
@@ -237,20 +247,20 @@ function WeaveForms({
         </div>
       </div>
 
-      <div className={'relative'}>
-        <WeaveProgress progressPosition={progressPosition} />
+      <div className={'relative'} onClick={seekOnWeaveForm}>
+        <WeaveProgress progressPosition={progressPositionPx} />
         <WeaveBars
           weaveBarHeightPx={weaveBarHeightPx}
           weaveBarWidthPx={weaveBarWidthPx}
           containerWidthPx={containerWidthPx}
           spaceBetweenBarsPx={spaceBetweenBarsPx}
-          progressPositionPx={progressPosition}
+          progressPositionPx={progressPositionPx}
           barColor={personAColor}
           noiseMarkers={noiseMarkersForPersonA}
         />
 
         <Timeline
-          progressPosition={progressPosition}
+          progressPosition={progressPositionPx}
           containerWidthPx={containerWidthPx}
         />
 
@@ -259,7 +269,7 @@ function WeaveForms({
           weaveBarWidthPx={weaveBarWidthPx}
           containerWidthPx={containerWidthPx}
           spaceBetweenBarsPx={spaceBetweenBarsPx}
-          progressPositionPx={progressPosition}
+          progressPositionPx={progressPositionPx}
           barColor={personBColor}
           noiseMarkers={noiseMarkersForPersonB}
         />
