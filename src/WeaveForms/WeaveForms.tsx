@@ -1,6 +1,14 @@
-import React, { MouseEventHandler, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { WordTiming } from '../core';
 import WeaveProgress from './WeaveProgress';
+import {
+  AUDIO_TRANSCRIBE_COLOR_PRIMARY,
+  AUDIO_TRANSCRIBE_COLOR_SECONDARY,
+  WEAVE_BAR_CONTAINER_WIDTH_PX,
+  WEAVE_BAR_HEIGHT_PX,
+  WEAVE_BAR_SPACE_BETWEEN_PX,
+  WEAVE_BAR_WIDTH_PX,
+} from '../App.theme';
 
 type NoiseMarker = Record<string, true>;
 
@@ -178,21 +186,13 @@ function WeaveForms({
   durationMs: number;
   seek: (timeMs: number) => void;
 }) {
-  // UI Options
-  const containerWidthPx = 900;
-  const weaveBarHeightPx = 40;
-  const weaveBarWidthPx = 2;
-  const spaceBetweenBarsPx = 1;
-  const personAColor = '#8868E9';
-  const personBColor = '#4CA3F0';
-
-  // Calculated values
   const weaveBarCount = Math.floor(
-    containerWidthPx / (weaveBarWidthPx + 2 * spaceBetweenBarsPx),
+    WEAVE_BAR_CONTAINER_WIDTH_PX /
+      (WEAVE_BAR_WIDTH_PX + 2 * WEAVE_BAR_SPACE_BETWEEN_PX),
   );
   const weaveDuration = Math.floor(durationMs / weaveBarCount);
   const progressPositionPx =
-    (currentTimeMs / durationMs) * containerWidthPx || 0;
+    (currentTimeMs / durationMs) * WEAVE_BAR_CONTAINER_WIDTH_PX || 0;
 
   const [noiseMarkersForPersonA, setNoiseMarkersForPersonA] = useState<
     number[]
@@ -213,7 +213,8 @@ function WeaveForms({
   const seekOnWeaveForm = (event: any) => {
     const start = event.currentTarget.getBoundingClientRect().x;
     const clicked = event.clientX;
-    const diff = ((clicked - start) / containerWidthPx) * durationMs;
+    const diff =
+      ((clicked - start) / WEAVE_BAR_CONTAINER_WIDTH_PX) * durationMs;
     seek(diff);
   };
 
@@ -222,7 +223,10 @@ function WeaveForms({
       <div className={'relative'}>
         <div
           className={'flex items-center my-2'}
-          style={{ color: personAColor, height: weaveBarHeightPx }}
+          style={{
+            color: AUDIO_TRANSCRIBE_COLOR_PRIMARY,
+            height: WEAVE_BAR_HEIGHT_PX,
+          }}
         >
           54 % YOU
         </div>
@@ -241,7 +245,10 @@ function WeaveForms({
 
         <div
           className={'flex items-center my-2'}
-          style={{ color: personBColor, height: weaveBarHeightPx }}
+          style={{
+            color: AUDIO_TRANSCRIBE_COLOR_SECONDARY,
+            height: WEAVE_BAR_HEIGHT_PX,
+          }}
         >
           46 % MICHAEL B.
         </div>
@@ -250,27 +257,27 @@ function WeaveForms({
       <div className={'relative'} onClick={seekOnWeaveForm}>
         <WeaveProgress progressPosition={progressPositionPx} />
         <WeaveBars
-          weaveBarHeightPx={weaveBarHeightPx}
-          weaveBarWidthPx={weaveBarWidthPx}
-          containerWidthPx={containerWidthPx}
-          spaceBetweenBarsPx={spaceBetweenBarsPx}
+          weaveBarHeightPx={WEAVE_BAR_HEIGHT_PX}
+          weaveBarWidthPx={WEAVE_BAR_WIDTH_PX}
+          containerWidthPx={WEAVE_BAR_CONTAINER_WIDTH_PX}
+          spaceBetweenBarsPx={WEAVE_BAR_SPACE_BETWEEN_PX}
           progressPositionPx={progressPositionPx}
-          barColor={personAColor}
+          barColor={AUDIO_TRANSCRIBE_COLOR_PRIMARY}
           noiseMarkers={noiseMarkersForPersonA}
         />
 
         <Timeline
           progressPosition={progressPositionPx}
-          containerWidthPx={containerWidthPx}
+          containerWidthPx={WEAVE_BAR_CONTAINER_WIDTH_PX}
         />
 
         <WeaveBars
-          weaveBarHeightPx={weaveBarHeightPx}
-          weaveBarWidthPx={weaveBarWidthPx}
-          containerWidthPx={containerWidthPx}
-          spaceBetweenBarsPx={spaceBetweenBarsPx}
+          weaveBarHeightPx={WEAVE_BAR_HEIGHT_PX}
+          weaveBarWidthPx={WEAVE_BAR_WIDTH_PX}
+          containerWidthPx={WEAVE_BAR_CONTAINER_WIDTH_PX}
+          spaceBetweenBarsPx={WEAVE_BAR_SPACE_BETWEEN_PX}
           progressPositionPx={progressPositionPx}
-          barColor={personBColor}
+          barColor={AUDIO_TRANSCRIBE_COLOR_SECONDARY}
           noiseMarkers={noiseMarkersForPersonB}
         />
       </div>

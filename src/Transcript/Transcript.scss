@@ -1,0 +1,7 @@
+.transcript-block {
+  margin: 20px 20px;
+
+  &:nth-child(even) {
+    margin-left: 60px;
+  }
+}
