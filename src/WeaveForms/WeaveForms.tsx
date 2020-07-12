@@ -9,185 +9,10 @@ import {
   WEAVE_BAR_SPACE_BETWEEN_PX,
   WEAVE_BAR_WIDTH_PX,
 } from '../App.theme';
-
-type NoiseMarker = Record<string, true>;
-
-// TODO [P. Labus] move this to app ?
-export function getNoiseMarkerForTiming(
-  { startTimeMs, endTimeMs }: WordTiming,
-  weaveDuration: number,
-): NoiseMarker {
-  const noiseMarkers: NoiseMarker = {};
-
-  let barIndex = Math.floor(startTimeMs / weaveDuration);
-  const endBarIndex = Math.floor(endTimeMs / weaveDuration);
-
-  while (barIndex <= endBarIndex) {
-    noiseMarkers[barIndex] = true;
-    barIndex++;
-  }
-
-  return noiseMarkers;
-}
-
-function getNoiseMarkers(
-  wordTimings: WordTiming[],
-  weaveDuration: number,
-): number[] {
-  if (!weaveDuration || !wordTimings) return [];
-
-  const noiseMarkers = wordTimings.reduce((noiseMarkers, wordTiming) => {
-    return {
-      ...noiseMarkers,
-      ...getNoiseMarkerForTiming(wordTiming, weaveDuration),
-    };
-  }, {});
-
-  return Object.keys(noiseMarkers).map(Number);
-}
-
-function WeaveBar({
-  weaveBarHeightPx,
-  weaveBarWidthPx,
-  weaveBarIndex,
-  spaceBetweenBarsPx,
-  progressPositionPx,
-  barColor,
-}: {
-  weaveBarHeightPx: number;
-  weaveBarWidthPx: number;
-  spaceBetweenBarsPx: number;
-  progressPositionPx: number;
-  weaveBarIndex: number;
-  barColor: string;
-}) {
-  const barPosition =
-    Number(weaveBarIndex) * (weaveBarWidthPx + 2 * spaceBetweenBarsPx);
-
-  return (
-    <div
-      style={{
-        height: weaveBarHeightPx,
-        width: weaveBarWidthPx,
-        background: progressPositionPx >= barPosition ? '#B7C0CE' : barColor,
-        position: 'absolute',
-        left: barPosition + 'px',
-      }}
-    ></div>
-  );
-}
-
-function WeaveBars({
-  weaveBarHeightPx,
-  noiseMarkers,
-  weaveBarWidthPx,
-  containerWidthPx,
-  spaceBetweenBarsPx,
-  progressPositionPx,
-  barColor,
-}: {
-  weaveBarHeightPx: number;
-  weaveBarWidthPx: number;
-  containerWidthPx: number;
-  spaceBetweenBarsPx: number;
-  progressPositionPx: number;
-  barColor: string;
-  noiseMarkers: number[];
-}) {
-  return (
-    <div
-      className={'relative my-2'}
-      style={{
-        width: containerWidthPx,
-        height: weaveBarHeightPx,
-      }}
-    >
-      {noiseMarkers.map((weaveBarIndex, index) => (
-        <WeaveBar
-          key={index}
-          progressPositionPx={progressPositionPx}
-          spaceBetweenBarsPx={spaceBetweenBarsPx}
-          weaveBarIndex={weaveBarIndex}
-          weaveBarHeightPx={weaveBarHeightPx}
-          weaveBarWidthPx={weaveBarWidthPx}
-          barColor={barColor}
-        />
-      ))}
-    </div>
-  );
-}
-
-function Timeline({
-  progressPosition,
-  containerWidthPx,
-}: {
-  progressPosition: number;
-  containerWidthPx: number;
-}) {
-  return (
-    <>
-      <div
-        style={{
-          height: '10px',
-          width: '2px',
-          left: 0,
-          top: '50%',
-          position: 'absolute',
-          transform: 'translateY(-50%)',
-          background: '#DFE2E5',
-        }}
-      ></div>
-      <div
-        style={{
-          background: '#7E8FA5',
-          width: progressPosition + 'px',
-          height: '1px',
-          position: 'absolute',
-          top: '50%',
-          transform: 'translateY(-50%)',
-        }}
-      ></div>
-      <div
-        style={{
-          background: '#DFE2E5',
-          width: containerWidthPx - progressPosition + 'px',
-          height: '1px',
-          position: 'absolute',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          left: progressPosition + 'px',
-        }}
-      ></div>
-      <div
-        style={{
-          height: '10px',
-          width: '2px',
-          right: 0,
-          top: '50%',
-          position: 'absolute',
-          transform: 'translateY(-50%)',
-          background: '#DFE2E5',
-        }}
-      ></div>
-    </>
-  );
-}
-
-export function TimelineSimple() {
-  return (
-    <div
-      style={{
-        background: '#DFE2E5',
-        width: '100%',
-        height: '1px',
-        position: 'absolute',
-        top: '50%',
-        transform: 'translateY(-50%)',
-        left: 0,
-      }}
-    ></div>
-  );
-}
+import TimelineBase from './TimelineBase';
+import Timeline from './Timeline';
+import WeaveBars from './WeaveBars';
+import { getNoiseMarkers } from './NoiseMarkingService';
 
 function WeaveForms({
   wordTimingsOfPersonA = [],
@@ -208,7 +33,7 @@ function WeaveForms({
   );
   const weaveDuration = Math.floor(durationMs / weaveBarCount);
   const progressPositionPx =
-    (currentTimeMs / durationMs) * WEAVE_BAR_CONTAINER_WIDTH_PX || 0;
+    (currentTimeMs / durationMs) * WEAVE_BAR_CONTAINER_WIDTH_PX;
 
   const [noiseMarkersForPersonA, setNoiseMarkersForPersonA] = useState<
     number[]
@@ -237,27 +62,11 @@ function WeaveForms({
   return (
     <div className={'flex p-2'} style={{ background: '#FAFBFC' }}>
       <div className={'relative'}>
-        <div
-          className={'flex items-center my-2 mr-4 font-bold'}
-          style={{
-            color: AUDIO_TRANSCRIBE_COLOR_PRIMARY,
-            height: WEAVE_BAR_HEIGHT_PX,
-          }}
-        >
-          54 % YOU
-        </div>
-
-        <TimelineSimple />
-
-        <div
-          className={'flex items-center my-2 mr-4 font-bold'}
-          style={{
-            color: AUDIO_TRANSCRIBE_COLOR_SECONDARY,
-            height: WEAVE_BAR_HEIGHT_PX,
-          }}
-        >
-          46 % MICHAEL B.
-        </div>
+        <VoiceOwner color={AUDIO_TRANSCRIBE_COLOR_SECONDARY}>
+          Brian Isaacson
+        </VoiceOwner>
+        <TimelineBase />
+        <VoiceOwner color={AUDIO_TRANSCRIBE_COLOR_PRIMARY}>YOU</VoiceOwner>
       </div>
 
       <div className={'relative'} onClick={seekOnWeaveForm}>
@@ -268,7 +77,7 @@ function WeaveForms({
           containerWidthPx={WEAVE_BAR_CONTAINER_WIDTH_PX}
           spaceBetweenBarsPx={WEAVE_BAR_SPACE_BETWEEN_PX}
           progressPositionPx={progressPositionPx}
-          barColor={AUDIO_TRANSCRIBE_COLOR_PRIMARY}
+          barColor={AUDIO_TRANSCRIBE_COLOR_SECONDARY}
           noiseMarkers={noiseMarkersForPersonA}
         />
 
@@ -283,7 +92,7 @@ function WeaveForms({
           containerWidthPx={WEAVE_BAR_CONTAINER_WIDTH_PX}
           spaceBetweenBarsPx={WEAVE_BAR_SPACE_BETWEEN_PX}
           progressPositionPx={progressPositionPx}
-          barColor={AUDIO_TRANSCRIBE_COLOR_SECONDARY}
+          barColor={AUDIO_TRANSCRIBE_COLOR_PRIMARY}
           noiseMarkers={noiseMarkersForPersonB}
         />
       </div>
@@ -291,6 +100,18 @@ function WeaveForms({
   );
 }
 
-// TODO [P. Labus] clicking on number when paused doesnt highlight
-// TODO [P. Labus] styles here should be classes
+function VoiceOwner({ color, children }: { color: string; children: any }) {
+  return (
+    <div
+      className={'flex items-center my-2 mr-4 font-bold whitespace-no-wrap'}
+      style={{
+        height: WEAVE_BAR_HEIGHT_PX,
+        color,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 export default WeaveForms;

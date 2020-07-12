@@ -8,20 +8,22 @@ import { ReactComponent as Play } from './play.svg';
 interface ControlBarProps {
   play: () => Promise<void> | void;
   pause: () => void;
+  forward: () => void;
+  rewind: () => void;
   paused: boolean;
 }
 
-function ControlBar({ play, pause, paused }: ControlBarProps) {
+function ControlBar({ play, pause, paused, rewind, forward }: ControlBarProps) {
   return (
     <nav className={'flex items-center justify-between py-3 px-5'}>
       <div className={'flex items-center'}>
-        <Rewind />
-        {paused ? <Play onClick={play} /> : null}
-        {!paused ? <Pause onClick={pause} /> : null}
-        <FastForward />
-        <button className={'btn btn-secondary'}>1.0x</button>
+        <Rewind onClick={rewind} className={'mr-4 cursor-pointer select-none'}/>
+        {paused ? <Play onClick={play} className={'mr-4 cursor-pointer select-none'} /> : null}
+        {!paused ? <Pause onClick={pause} className={'mr-4 cursor-pointer select-none'} /> : null}
+        <FastForward onClick={forward} className={'mr-4 cursor-pointer select-none'}/>
+        <button className={'btn btn-secondary cursor-pointer select-none'}>1.0x</button>
       </div>
-      <button className={'btn btn-share'}>Share</button>
+      <button className={'btn btn-share cursor-pointer select-none'}>Share</button>
     </nav>
   );
 }

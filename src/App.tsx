@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import './App.scss';
-import WeaveForms from './WeaveForms/WeaveForms';
+import { TranscriptModel, WordTiming } from './core';
 import { getTranscript } from './Transcript/TranscriptService';
-import { TranscriptModel } from './core';
+import WeaveForms from './WeaveForms/WeaveForms';
 import ControlBar from './ControlBar/ControlBar';
 import Transcript from './Transcript/Transcript';
 
@@ -11,17 +10,31 @@ function App() {
   const requestRef = React.useRef<number | undefined>();
   const previousTimeRef = React.useRef<number | undefined>();
 
-  useEffect(() => {
-    // Line 18:6:  React Hook useEffect has missing dependencies: 'pause' and 'updateAudioState'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
-    audioRef.current.addEventListener('canplay', updateAudioState);
-    audioRef.current.addEventListener('ended', pause);
-    setTranscript(getTranscript());
-  }, []);
-
   const [transcript, setTranscript] = useState<TranscriptModel>({
     wordTimings: [],
     transcriptText: [],
   });
+
+  const [wordTimings, setWordTimings] = useState<Array<WordTiming[]>>([[], []]);
+
+  useEffect(() => {
+    // Line 18:6:  React Hook useEffect has missing dependencies: 'pause' and 'updateAudioState'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+    audioRef.current.addEventListener('canplay', updateAudioState);
+    audioRef.current.addEventListener('ended', pause);
+
+    const transcriptModel = getTranscript();
+    setTranscript(transcriptModel);
+
+    const wordTimingsForPersonA = getWordTimings(
+      transcriptModel.wordTimings,
+      (index) => !Boolean(index % 2),
+    );
+    const wordTimingsForPersonB = getWordTimings(
+      transcriptModel.wordTimings,
+      (index) => Boolean(index % 2),
+    );
+    setWordTimings([wordTimingsForPersonA, wordTimingsForPersonB]);
+  }, []);
 
   const [audio, setAudio] = useState({
     currentTimeMs: 0,
@@ -44,6 +57,22 @@ function App() {
     audioRef.current.currentTime = timeMs / 1000;
   };
 
+  const forward = () => {
+    const forwardTimeInSeconds = 10;
+    const next = audioRef.current.currentTime + forwardTimeInSeconds;
+    seek(
+      next > audioRef.current.duration
+        ? audioRef.current.duration * 1000
+        : next * 1000,
+    );
+  };
+
+  const rewind = () => {
+    const rewindTimeInSeconds = 10;
+    const previous = audioRef.current.currentTime - rewindTimeInSeconds;
+    seek(previous < 0 ? 0 : previous * 1000);
+  };
+
   const animate = (time: number) => {
     if (previousTimeRef.current !== undefined) {
       updateAudioState();
@@ -61,13 +90,26 @@ function App() {
     });
   };
 
+  const getWordTimings: (
+    wordTimings: Array<WordTiming[]>,
+    filterFn: (index: number) => boolean,
+  ) => WordTiming[] = (wordTimings, filterFn) => {
+    return wordTimings.filter((_, idx) => filterFn(idx)).flat();
+  };
+
   return (
     <>
-      <ControlBar play={play} pause={pause} paused={audio.paused} />
+      <ControlBar
+        paused={audio.paused}
+        play={play}
+        pause={pause}
+        forward={forward}
+        rewind={rewind}
+      />
       <WeaveForms
         seek={seek}
-        wordTimingsOfPersonA={transcript.wordTimings[0]}
-        wordTimingsOfPersonB={transcript.wordTimings[1]}
+        wordTimingsOfPersonA={wordTimings[0]}
+        wordTimingsOfPersonB={wordTimings[1]}
         currentTimeMs={audio.currentTimeMs}
         durationMs={audio.durationMs}
       />

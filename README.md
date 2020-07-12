@@ -1,5 +1,7 @@
 # todo:
-- is every css global ?
+- warnings in console
+- css globals ?
+- how to handle keys
 - add / remove tests
 - check style variables
 
