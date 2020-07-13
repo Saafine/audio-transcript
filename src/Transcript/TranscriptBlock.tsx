@@ -30,9 +30,9 @@ function TranscriptBlock({
               onClick={() => seekAudioTime(startTimeMs)}
               className={shouldHighlight(startTimeMs, endTimeMs) ? 'highlight' : ''}
             >
-              {word + ' '}
+              {word}
             </span>
-            &#32;
+            <span> </span>
           </React.Fragment>
         ))}
       </div>
