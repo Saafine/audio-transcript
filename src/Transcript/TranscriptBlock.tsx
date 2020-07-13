@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import './TranscriptBlock.scss';
 import { WordTiming } from './interfaces';
 import { getMinutesFormatted } from '../TimeProgress/time.utils';
@@ -14,9 +14,12 @@ function TranscriptBlock({
   seekAudioTime: (timeMs: number) => void;
   color: string;
 }) {
-  const shouldHighlight = (startTimeMs: number, endTimeMs: number): boolean => {
-    return startTimeMs <= currentTimeMs && currentTimeMs < endTimeMs;
-  };
+  const shouldHighlight = useCallback(
+    (startTimeMs: number, endTimeMs: number): boolean => {
+      return startTimeMs <= currentTimeMs && currentTimeMs < endTimeMs;
+    },
+    [currentTimeMs],
+  );
 
   return (
     <div className="flex p-5 transcript-block">

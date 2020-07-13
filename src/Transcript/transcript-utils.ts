@@ -1,5 +1,6 @@
 import TRANSCRIPT_JSON from './transcript.json';
-import { TranscriptJSON, TranscriptModel, WordTiming, WordTimingsForCaller } from './interfaces';
+import { TranscriptJSON, TranscriptModel, WordTiming } from './interfaces';
+import { WordTimingsForCaller } from '../AudioPlayer/useTranscript';
 
 export function getTranscript(transcriptJSON = TRANSCRIPT_JSON): TranscriptModel {
   return mapTranscriptJsonToModel(transcriptJSON);
@@ -7,15 +8,27 @@ export function getTranscript(transcriptJSON = TRANSCRIPT_JSON): TranscriptModel
 
 function mapTranscriptJsonToModel(transcriptJSON: TranscriptJSON): TranscriptModel {
   return {
-    wordTimings: transcriptJSON.word_timings.map((wordTimings) => {
-      return wordTimings.map(({ word, endTime, startTime }) => ({
-        word: word,
-        startTimeMs: getTimeInMs(startTime),
-        endTimeMs: getTimeInMs(endTime),
-      }));
+    // TODO [P. Labus] callersTimings
+    wordTimings: transcriptJSON.word_timings.map((wordTimings, index) => {
+      return {
+        timings: wordTimings.map(({ word, endTime, startTime }) => ({
+          word: word,
+          startTimeMs: getTimeInMs(startTime),
+          endTimeMs: getTimeInMs(endTime),
+        })),
+        callerId: index % 2,
+      };
     }),
     transcriptText: transcriptJSON.transcript_text,
   };
+}
+
+export function isCallerA(callerId: number): boolean {
+  return Boolean(callerId % 2);
+}
+
+export function isCallerB(callerId: number): boolean {
+  return !(callerId % 2);
 }
 
 function getMillisecondsFromText(ms: string): number {
@@ -33,17 +46,17 @@ function getTimeInMs(time: string): number {
 }
 
 export function getWordTimingsForEachCaller(transcript: TranscriptModel): WordTimingsForCaller {
-  const callerA = getWordTimings(transcript.wordTimings, (index) => !Boolean(index % 2));
-  const callerB = getWordTimings(transcript.wordTimings, (index) => Boolean(index % 2));
-  return { callerA, callerB };
+  return {
+    callerA: transcript.wordTimings
+      .filter(({ callerId }) => isCallerA(callerId))
+      .map(({ timings }) => timings)
+      .flat(),
+    callerB: transcript.wordTimings
+      .filter(({ callerId }) => isCallerB(callerId))
+      .map(({ timings }) => timings)
+      .flat(),
+  };
 }
-
-const getWordTimings: (
-  wordTimings: Array<WordTiming[]>,
-  filterFn: (index: number) => boolean,
-) => WordTiming[] = (wordTimings, filterFn) => {
-  return wordTimings.filter((_, idx) => filterFn(idx)).flat();
-};
 
 export function getTimeSpentTalkingPercentage(
   wordTimings: WordTiming[],

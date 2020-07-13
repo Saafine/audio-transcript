@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import './Transcript.scss';
 import TranscriptBlock from './TranscriptBlock';
 import { AUDIO_TRANSCRIBE_COLOR_PRIMARY, AUDIO_TRANSCRIBE_COLOR_SECONDARY } from '../App.theme';
-import { TranscriptModel, WordTiming } from './interfaces';
+import { TranscriptModel } from './interfaces';
+import { isCallerA } from './transcript-utils';
 
 function Transcript({
   transcript,
@@ -15,7 +16,7 @@ function Transcript({
 }): any {
   const [search, setSearch] = useState('');
 
-  const filterFn = (_: WordTiming[], index: number) => {
+  const filterFn = (_: any, index: number) => {
     return transcript.transcriptText[index].includes(search);
   };
 
@@ -32,10 +33,12 @@ function Transcript({
         <div className="transcript" key={index}>
           <TranscriptBlock
             color={
-              index % 2 === 0 ? AUDIO_TRANSCRIBE_COLOR_SECONDARY : AUDIO_TRANSCRIBE_COLOR_PRIMARY
+              isCallerA(wordTimings.callerId)
+                ? AUDIO_TRANSCRIBE_COLOR_PRIMARY
+                : AUDIO_TRANSCRIBE_COLOR_SECONDARY
             }
             seekAudioTime={seekAudioTime}
-            wordTimings={wordTimings}
+            wordTimings={wordTimings.timings}
             currentTimeMs={currentTimeMs}
           />
         </div>
