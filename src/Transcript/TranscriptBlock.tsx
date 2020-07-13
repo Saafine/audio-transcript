@@ -1,6 +1,7 @@
 import React from 'react';
 import './TranscriptBlock.scss';
 import { WordTiming } from './interfaces';
+import { getMinutesFormatted } from '../TimeProgress/time.utils';
 
 function TranscriptBlock({
   wordTimings,
@@ -20,7 +21,7 @@ function TranscriptBlock({
   return (
     <div className="flex p-5 transcript-block">
       <div className="font-semibold pr-3" style={{ color, borderRight: `2px solid ${color}` }}>
-        03:25
+        {getMinutesFormatted(wordTimings[0].startTimeMs)}
       </div>
       <div className="pl-3" style={{ maxWidth: '650px' }}>
         {wordTimings.map(({ word, startTimeMs, endTimeMs }) => (
