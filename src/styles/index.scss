@@ -13,6 +13,10 @@ html {
   letter-spacing: 0;
   text-align: center;
   padding: 0px 8px;
+
+  &:focus {
+    outline: 0;
+  }
 }
 
 .btn-share {

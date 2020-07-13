@@ -2,6 +2,7 @@
 
 - timestamp fix
 - fastforward
+- animate words transition in transcription
 - css fixes
 - ghost space
 - add tests

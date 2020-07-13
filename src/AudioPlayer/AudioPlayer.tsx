@@ -8,6 +8,7 @@ import { audioPlayerReducer } from './audio-player.reducer';
 import {
   AUDIO_PLAYER_ACTIONS_UPDATE_CURRENT_TIME_MS,
   AUDIO_PLAYER_ACTIONS_UPDATE_PAUSED,
+  AUDIO_PLAYER_ACTIONS_UPDATE_SPEED,
 } from './audio-player.actions';
 import TimeProgress from '../TimeProgress/TimeProgress';
 
@@ -16,6 +17,7 @@ function AudioPlayer() {
     paused: true,
     durationMs: 0,
     currentTimeMs: 0,
+    speed: '1.0x',
   });
 
   const [transcript, callerWordTimings] = useTranscript();
@@ -57,6 +59,17 @@ function AudioPlayer() {
     seek(timeMs);
   }, [seek, state]);
 
+  const setSpeed = useCallback(
+    (playBackRate: string) => {
+      audioInstance.playbackRate = Number(playBackRate.replace('x', ''));
+      dispatch({
+        type: AUDIO_PLAYER_ACTIONS_UPDATE_SPEED,
+        payload: playBackRate,
+      });
+    },
+    [audioInstance],
+  );
+
   return (
     <>
       <ControlBar
@@ -64,6 +77,8 @@ function AudioPlayer() {
         play={play}
         forward={forward}
         rewind={rewind}
+        setSpeed={setSpeed}
+        speed={state.speed}
         pause={pause}
       />
       <div style={{ background: 'rgb(250, 251, 252)', paddingTop: '24px', paddingLeft: '24px' }}>

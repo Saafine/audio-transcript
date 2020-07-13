@@ -23,7 +23,7 @@ function Transcript({
     <>
       <input
         type="input"
-        className="transcript__search"
+        className="transcript__search mb-4"
         aria-label="search call transcript"
         placeholder="Search call transcript"
         onChange={(event) => setSearch(event.target.value)}

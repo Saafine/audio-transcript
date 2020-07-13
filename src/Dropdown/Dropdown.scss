@@ -1,0 +1,19 @@
+.dropdown {
+  &__options {
+    margin-top: 4px;
+    position: absolute;
+    font-size: 12px;
+    background: white;
+    z-index: 999;
+    width: 100%;
+    left: 0;
+    text-align: center;
+
+    & > * {
+      padding: 2px;
+      color: #4ca3f0;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
+}
