@@ -1,8 +1,11 @@
 # todo:
+
+- timestamp fix
+- fastforward
 - css fixes
 - ghost space
 - add tests
-- smooth animation / perf improvements
+- smooth animation / perf improvements (filterFn)
 
 ## Available Scripts
 

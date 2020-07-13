@@ -15,7 +15,7 @@ interface ControlBarProps {
 
 export function ControlBar({ play, pause, paused, rewind, forward }: ControlBarProps) {
   return (
-    <nav className="flex items-center justify-between py-3 px-5">
+    <nav className="control-bar flex items-center justify-between px-5">
       <div className="flex items-center">
         <Rewind onClick={rewind} className="mr-4 cursor-pointer select-none" />
         {paused ? <Play onClick={play} className="mr-4 cursor-pointer select-none" /> : null}

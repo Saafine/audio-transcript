@@ -65,13 +65,15 @@ function WeaveForms({
   );
 
   return (
-    <div className="flex" style={{ background: '#FAFBFC' }}>
+    <div className="flex" style={{ background: '#FAFBFC', padding: '20px 20px', borderBottom: "1px solid #DFE2E5" }}>
       <div className="relative">
         <VoiceOwner color={AUDIO_TRANSCRIBE_COLOR_SECONDARY}>
-          {spentTalking.callerA}% Brian Isaacson
+          <div style={{ width: '35px' }}>{spentTalking.callerA}%</div> Brian Isaacson
         </VoiceOwner>
         <TimelineBase />
-        <VoiceOwner color={AUDIO_TRANSCRIBE_COLOR_PRIMARY}>{spentTalking.callerB}% YOU</VoiceOwner>
+        <VoiceOwner color={AUDIO_TRANSCRIBE_COLOR_PRIMARY}>
+          <div style={{ width: '35px' }}>{spentTalking.callerB}%</div> YOU
+        </VoiceOwner>
       </div>
 
       <div className="relative" onClick={seekOnWeaveForm}>

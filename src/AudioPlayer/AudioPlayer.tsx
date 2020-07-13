@@ -66,7 +66,7 @@ function AudioPlayer() {
         rewind={rewind}
         pause={pause}
       />
-      <div style={{ background: 'rgb(250, 251, 252)' }}>
+      <div style={{ background: 'rgb(250, 251, 252)', paddingTop: '24px', paddingLeft: '24px' }}>
         <TimeProgress currentTimeMs={state.currentTimeMs} durationMs={state.durationMs} />
       </div>
       <WeaveForms

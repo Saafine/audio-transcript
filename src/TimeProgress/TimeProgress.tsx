@@ -1,5 +1,6 @@
 import React from 'react';
 import { getMinutesFormatted } from './time.utils';
+import './TimeProgress.scss';
 
 export function TimeProgress({
   currentTimeMs,
@@ -9,7 +10,10 @@ export function TimeProgress({
   durationMs: number;
 }) {
   return (
-    <div className="inline-flex p-1 bg-gray-200 text-xs rounded m-4 font-bold">
+    <div
+      className="time-progress inline-flex px-2 bg-gray-200 text-xs rounded font-bold"
+      style={{ height: '20px' }}
+    >
       <div>{getMinutesFormatted(currentTimeMs)}</div>
       &nbsp;/&nbsp;
       <div className="text-gray-500">{getMinutesFormatted(durationMs)}</div>

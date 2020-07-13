@@ -1,9 +1,15 @@
 .transcript {
   transition: ease-in-out 0.3s;
+  font-size: 13px;
+
+  &:nth-child(even) {
+    padding-left: 50px;
+    line-height: 17px;
+    color: #797b85;
+  }
 
   &:nth-child(odd) {
-    color: #4f5769;
-    padding-left: 60px;
+    color: #A0A8B8;
   }
 
   &:hover {
@@ -12,10 +18,25 @@
 
   &__search {
     padding: 8px;
+    margin-top: 19px;
+    margin-left: 26px;
     border: 1px solid #eaedf1;
     border-radius: 6px;
     width: 100%;
     max-width: 450px;
     padding-left: 35px;
   }
+}
+
+.A {
+  opacity: 0.25;
+  border: 2px solid #8868e9;
+  font-family: Helvetica;
+  font-size: 12px;
+  color: #8868e9;
+  line-height: 17px;
+  font-family: Helvetica;
+  font-size: 13px;
+  color: #354053;
+  line-height: 17px;
 }
