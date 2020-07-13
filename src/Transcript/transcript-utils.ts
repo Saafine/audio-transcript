@@ -1,5 +1,5 @@
-import { TranscriptJSON, TranscriptModel, WordTiming, WordTimingsForCaller } from '../core';
 import TRANSCRIPT_JSON from './transcript.json';
+import { TranscriptJSON, TranscriptModel, WordTiming, WordTimingsForCaller } from './interfaces';
 
 export function getTranscript(transcriptJSON = TRANSCRIPT_JSON): TranscriptModel {
   return mapTranscriptJsonToModel(transcriptJSON);

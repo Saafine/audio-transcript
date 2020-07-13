@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { WordTiming } from '../core';
 import WeaveProgress from './WeaveProgress';
 import {
   AUDIO_TRANSCRIBE_COLOR_PRIMARY,
@@ -14,6 +13,7 @@ import Timeline from './Timeline';
 import WeaveBars from './WeaveBars';
 import VoiceOwner from './VoiceOwner';
 import { getNoiseMarkers } from './noise-marking-utils';
+import { WordTiming } from '../Transcript/interfaces';
 
 function WeaveForms({
   wordTimingsOfPersonA = [],

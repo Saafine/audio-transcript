@@ -1,6 +1,6 @@
 import React from 'react';
 import { getTranscript } from './transcript-utils';
-import { WordTiming } from '../core';
+import { WordTiming } from './interfaces';
 
 test('maps time from transcript to milliseconds', () => {
   const inputWordTimings = [

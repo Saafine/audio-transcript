@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { TranscriptModel, WordTimingsForCaller } from './core';
-import { getTranscript, getWordTimingsForEachCaller } from './Transcript/transcript-utils';
+import { getTranscript, getWordTimingsForEachCaller } from '../Transcript/transcript-utils';
+import { TranscriptModel, WordTimingsForCaller } from '../Transcript/interfaces';
 
 export function useTranscript(): [TranscriptModel, WordTimingsForCaller] {
   const [transcript, setTranscript] = useState<TranscriptModel>({

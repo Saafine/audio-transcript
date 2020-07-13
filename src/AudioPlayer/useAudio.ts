@@ -3,7 +3,7 @@ import {
   AUDIO_PLAYER_ACTIONS_UPDATE_CURRENT_TIME_MS,
   AUDIO_PLAYER_ACTIONS_UPDATE_DURATIONS_MS,
   AudioAction,
-} from './App';
+} from './audio-player.actions';
 
 export function useAudio(src: HTMLAudioElement, dispatch: Dispatch<AudioAction>) {
   const [audioInstance] = useState(new Audio('./59e106639d79684277df770d.wav'));

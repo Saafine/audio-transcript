@@ -1,6 +1,6 @@
 import React from 'react';
 import './TranscriptBlock.scss';
-import { WordTiming } from '../core';
+import { WordTiming } from './interfaces';
 
 function TranscriptBlock({
   wordTimings,

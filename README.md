@@ -1,6 +1,7 @@
 # todo:
 - seekOnWeaveForm callback?
 - add / remove tests
+// TODO [P. Labus] smooth animation
 
 
 ## Available Scripts

@@ -1,8 +1,8 @@
 import React from 'react';
 import './Transcript.scss';
 import TranscriptBlock from './TranscriptBlock';
-import { TranscriptModel } from '../core';
 import { AUDIO_TRANSCRIBE_COLOR_PRIMARY, AUDIO_TRANSCRIBE_COLOR_SECONDARY } from '../App.theme';
+import { TranscriptModel } from './interfaces';
 
 function Transcript({
   transcript,
