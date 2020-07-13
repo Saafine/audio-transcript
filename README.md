@@ -1,12 +1,9 @@
 # todo:
 
-- timestamp fix
-- fastforward
+- smooth animation / perf improvements (filterFn)
 - animate words transition in transcription
-- css fixes
 - ghost space
 - add tests
-- smooth animation / perf improvements (filterFn)
 
 ## Available Scripts
 

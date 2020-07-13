@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './ControlBar.scss';
 import { ReactComponent as Rewind } from './rewind.svg';
 import { ReactComponent as FastForward } from './fastforward.svg';
@@ -34,7 +34,7 @@ export function ControlBar({
         {paused ? <Play onClick={play} className="mr-4 cursor-pointer select-none" /> : null}
         {!paused ? <Pause onClick={pause} className="mr-4 cursor-pointer select-none" /> : null}
         <FastForward onClick={forward} className="mr-4 cursor-pointer select-none" />
-        <Dropdown value={speed} options={speedOptions} onOptionSelected={setSpeed}/>
+        <Dropdown value={speed} options={speedOptions} onOptionSelected={setSpeed} />
       </div>
       <button className="btn btn-share cursor-pointer select-none">Share</button>
     </nav>
