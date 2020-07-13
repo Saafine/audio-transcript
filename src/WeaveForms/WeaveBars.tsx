@@ -19,23 +19,21 @@ function WeaveBars({
 }) {
   return (
     <div
-      className={'relative my-2'}
+      className="relative my-2"
       style={{
         width: containerWidthPx,
         height: weaveBarHeightPx,
       }}
     >
-      {noiseMarkers.map((weaveBarIndex, index) => {
-        const barPosition =
-          weaveBarIndex * (weaveBarWidthPx + 2 * spaceBetweenBarsPx);
+      {noiseMarkers.map((weaveBarIndex) => {
+        const barPosition = weaveBarIndex * (weaveBarWidthPx + 2 * spaceBetweenBarsPx);
         return (
           <div
-            key={index}
+            key={weaveBarIndex}
             style={{
               height: weaveBarHeightPx,
               width: weaveBarWidthPx,
-              background:
-                progressPositionPx >= barPosition ? '#B7C0CE' : barColor,
+              background: progressPositionPx >= barPosition ? '#B7C0CE' : barColor,
               position: 'absolute',
               left: barPosition + 'px',
             }}

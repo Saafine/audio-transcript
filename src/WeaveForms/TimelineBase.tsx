@@ -1,15 +1,9 @@
 import React, { CSSProperties } from 'react';
 
-export const baseTimelineStyle: CSSProperties = {
-  position: 'absolute',
-  top: '50%',
-  transform: 'translateY(-50%)',
-};
-
 export const TIMELINE_COLOR_PRIMARY = '#DFE2E5';
 export const TIMELINE_COLOR_SECONDARY = '#7E8FA5';
 
-export function TimelineBase({ cssProps = {} }: { cssProps?: CSSProperties }) {
+export function TimelineBase({ styles = {} }: { styles?: CSSProperties }) {
   return (
     <div
       style={{
@@ -20,7 +14,7 @@ export function TimelineBase({ cssProps = {} }: { cssProps?: CSSProperties }) {
         height: '1px',
         width: '100%',
         left: 0,
-        ...cssProps,
+        ...styles,
       }}
     ></div>
   );

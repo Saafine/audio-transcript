@@ -9,7 +9,6 @@ export interface TranscriptJSON {
   word_timings: Array<WordTimingJson[]>;
 }
 
-
 export interface WordTiming {
   startTimeMs: number;
   endTimeMs: number;
@@ -19,4 +18,9 @@ export interface WordTiming {
 export interface TranscriptModel {
   transcriptText: string[];
   wordTimings: Array<WordTiming[]>;
+}
+
+export interface WordTimingsForCaller {
+  callerA: WordTiming[];
+  callerB: WordTiming[];
 }

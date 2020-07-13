@@ -11,21 +11,21 @@ function Timeline({
   return (
     <>
       <TimelineBlock
-        cssProps={{
+        styles={{
           height: '10px',
           width: '2px',
         }}
       />
 
       <TimelineBlock
-        cssProps={{
+        styles={{
           height: '10px',
           width: '2px',
         }}
       />
 
       <TimelineBlock
-        cssProps={{
+        styles={{
           height: '2px',
           background: TIMELINE_COLOR_SECONDARY,
           width: progressPosition + 'px',
@@ -33,14 +33,14 @@ function Timeline({
       />
 
       <TimelineBlock
-        cssProps={{
+        styles={{
           width: containerWidthPx - progressPosition + 'px',
           left: progressPosition + 'px',
         }}
       />
 
       <TimelineBlock
-        cssProps={{
+        styles={{
           height: '10px',
           width: '2px',
           right: 0,

@@ -18,21 +18,16 @@ function TranscriptBlock({
   };
 
   return (
-    <div className={'flex'}>
-      <div
-        className={'font-semibold pr-3'}
-        style={{ color, borderRight: `3px solid ${color}` }}
-      >
+    <div className="flex">
+      <div className="font-semibold pr-3" style={{ color, borderRight: `3px solid ${color}` }}>
         03:25
       </div>
-      <div className={'pl-3'} style={{ maxWidth: '650px' }}>
-        {wordTimings.map(({ word, startTimeMs, endTimeMs }, index) => (
-          <React.Fragment key={index}>
+      <div className="pl-3" style={{ maxWidth: '650px' }}>
+        {wordTimings.map(({ word, startTimeMs, endTimeMs }) => (
+          <React.Fragment key={startTimeMs + ' ' + endTimeMs}>
             <span
               onClick={() => seekAudioTime(startTimeMs)}
-              className={
-                shouldHighlight(startTimeMs, endTimeMs) ? 'highlight' : ''
-              }
+              className={shouldHighlight(startTimeMs, endTimeMs) ? 'highlight' : ''}
             >
               {word + ' '}
             </span>

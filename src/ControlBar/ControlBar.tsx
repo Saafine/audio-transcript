@@ -13,17 +13,17 @@ interface ControlBarProps {
   paused: boolean;
 }
 
-function ControlBar({ play, pause, paused, rewind, forward }: ControlBarProps) {
+export function ControlBar({ play, pause, paused, rewind, forward }: ControlBarProps) {
   return (
-    <nav className={'flex items-center justify-between py-3 px-5'}>
-      <div className={'flex items-center'}>
-        <Rewind onClick={rewind} className={'mr-4 cursor-pointer select-none'}/>
-        {paused ? <Play onClick={play} className={'mr-4 cursor-pointer select-none'} /> : null}
-        {!paused ? <Pause onClick={pause} className={'mr-4 cursor-pointer select-none'} /> : null}
-        <FastForward onClick={forward} className={'mr-4 cursor-pointer select-none'}/>
-        <button className={'btn btn-secondary cursor-pointer select-none'}>1.0x</button>
+    <nav className="flex items-center justify-between py-3 px-5">
+      <div className="flex items-center">
+        <Rewind onClick={rewind} className="mr-4 cursor-pointer select-none" />
+        {paused ? <Play onClick={play} className="mr-4 cursor-pointer select-none" /> : null}
+        {!paused ? <Pause onClick={pause} className="mr-4 cursor-pointer select-none" /> : null}
+        <FastForward onClick={forward} className="mr-4 cursor-pointer select-none" />
+        <button className="btn btn-secondary cursor-pointer select-none">1.0x</button>
       </div>
-      <button className={'btn btn-share cursor-pointer select-none'}>Share</button>
+      <button className="btn btn-share cursor-pointer select-none">Share</button>
     </nav>
   );
 }

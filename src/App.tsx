@@ -1,122 +1,118 @@
-import React, { useEffect, useState } from 'react';
-import { TranscriptModel, WordTiming } from './core';
-import { getTranscript } from './Transcript/TranscriptService';
+import React, { useCallback, useReducer } from 'react';
 import WeaveForms from './WeaveForms/WeaveForms';
 import ControlBar from './ControlBar/ControlBar';
 import Transcript from './Transcript/Transcript';
+import { useAudio } from './useAudio';
+import { useTranscript } from './useTranscript';
 
-function App() {
-  const audioRef = React.useRef(new Audio('./59e106639d79684277df770d.wav'));
-  const requestRef = React.useRef<number | undefined>();
-  const previousTimeRef = React.useRef<number | undefined>();
+export const AUDIO_PLAYER_ACTIONS_UPDATE_DURATIONS_MS = 'updateDurationMs';
+export const AUDIO_PLAYER_ACTIONS_UPDATE_CURRENT_TIME_MS = 'updateCurrentTimeMs';
+export const AUDIO_PLAYER_ACTIONS_UPDATE_PAUSED = 'updatePaused';
 
-  const [transcript, setTranscript] = useState<TranscriptModel>({
-    wordTimings: [],
-    transcriptText: [],
-  });
+// TODO [P. Labus] classnames refactor
 
-  const [wordTimings, setWordTimings] = useState<Array<WordTiming[]>>([[], []]);
+// TODO [P. Labus] move this
+interface AudioPlayerState {
+  durationMs: number;
+  currentTimeMs: number;
+  paused: boolean;
+}
 
-  useEffect(() => {
-    // Line 18:6:  React Hook useEffect has missing dependencies: 'pause' and 'updateAudioState'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
-    audioRef.current.addEventListener('canplay', updateAudioState);
-    audioRef.current.addEventListener('ended', pause);
-
-    const transcriptModel = getTranscript();
-    setTranscript(transcriptModel);
-
-    const wordTimingsForPersonA = getWordTimings(
-      transcriptModel.wordTimings,
-      (index) => !Boolean(index % 2),
-    );
-    const wordTimingsForPersonB = getWordTimings(
-      transcriptModel.wordTimings,
-      (index) => Boolean(index % 2),
-    );
-    setWordTimings([wordTimingsForPersonA, wordTimingsForPersonB]);
-  }, []);
-
-  const [audio, setAudio] = useState({
-    currentTimeMs: 0,
-    durationMs: 0,
-    paused: true,
-  });
-
-  const play = () => {
-    audioRef.current.play();
-    requestRef.current = requestAnimationFrame(animate);
-  };
-
-  const pause = () => {
-    audioRef.current.pause();
-    cancelAnimationFrame(requestRef.current as number);
-    updateAudioState();
-  };
-
-  const seek = (timeMs: number) => {
-    audioRef.current.currentTime = timeMs / 1000;
-  };
-
-  const forward = () => {
-    const forwardTimeInSeconds = 10;
-    const next = audioRef.current.currentTime + forwardTimeInSeconds;
-    seek(
-      next > audioRef.current.duration
-        ? audioRef.current.duration * 1000
-        : next * 1000,
-    );
-  };
-
-  const rewind = () => {
-    const rewindTimeInSeconds = 10;
-    const previous = audioRef.current.currentTime - rewindTimeInSeconds;
-    seek(previous < 0 ? 0 : previous * 1000);
-  };
-
-  const animate = (time: number) => {
-    if (previousTimeRef.current !== undefined) {
-      updateAudioState();
+export type AudioAction =
+  | {
+      type: typeof AUDIO_PLAYER_ACTIONS_UPDATE_DURATIONS_MS;
+      payload: number;
     }
-    previousTimeRef.current = time;
-    requestRef.current = requestAnimationFrame(animate);
-  };
+  | {
+      type: typeof AUDIO_PLAYER_ACTIONS_UPDATE_CURRENT_TIME_MS;
+      payload: number;
+    }
+  | {
+      type: typeof AUDIO_PLAYER_ACTIONS_UPDATE_PAUSED;
+      payload: boolean;
+    };
 
-  const updateAudioState = () => {
-    setAudio({
-      ...audio,
-      currentTimeMs: audioRef.current.currentTime * 1000,
-      durationMs: audioRef.current.duration * 1000,
-      paused: audioRef.current.paused,
-    });
-  };
+function reducer(state: AudioPlayerState, action: AudioAction) {
+  switch (action.type) {
+    case AUDIO_PLAYER_ACTIONS_UPDATE_DURATIONS_MS:
+      return { ...state, durationMs: action.payload };
+    case AUDIO_PLAYER_ACTIONS_UPDATE_CURRENT_TIME_MS:
+      return { ...state, currentTimeMs: action.payload };
+    case AUDIO_PLAYER_ACTIONS_UPDATE_PAUSED:
+      return { ...state, paused: action.payload };
+    default:
+      throw new Error();
+  }
+}
 
-  const getWordTimings: (
-    wordTimings: Array<WordTiming[]>,
-    filterFn: (index: number) => boolean,
-  ) => WordTiming[] = (wordTimings, filterFn) => {
-    return wordTimings.filter((_, idx) => filterFn(idx)).flat();
-  };
+// TODO [P. Labus]  Move logic and refactor into a AudioPlayer Component
+function App() {
+  const [state, dispatch] = useReducer(reducer, {
+    paused: true,
+    durationMs: 0,
+    currentTimeMs: 0,
+  });
+
+  // TODO [P. Labus] smooth animation
+  const [transcript, callerWordTimings] = useTranscript();
+  const audioInstance = useAudio(new Audio('./59e106639d79684277df770d.wav'), dispatch);
+
+  const pause = useCallback(() => {
+    audioInstance.pause();
+    dispatch({ type: AUDIO_PLAYER_ACTIONS_UPDATE_PAUSED, payload: true });
+  }, [audioInstance]);
+
+  const play = useCallback(() => {
+    audioInstance.play();
+    dispatch({ type: AUDIO_PLAYER_ACTIONS_UPDATE_PAUSED, payload: false });
+  }, [audioInstance]);
+
+  const seek = useCallback(
+    (timeMs: number) => {
+      const time = timeMs / 1000;
+      audioInstance.currentTime = time;
+      dispatch({
+        type: AUDIO_PLAYER_ACTIONS_UPDATE_CURRENT_TIME_MS,
+        payload: time,
+      });
+    },
+    [audioInstance],
+  );
+
+  const forward = useCallback(() => {
+    const forwardTimeInSeconds = 10 * 1000;
+    const next = state.currentTimeMs + forwardTimeInSeconds;
+    const timeMs = next > state.durationMs ? state.durationMs : next;
+    seek(timeMs);
+  }, [seek, state]);
+
+  const rewind = useCallback(() => {
+    const rewindTimeInMs = 10 * 1000;
+    const previous = state.currentTimeMs - rewindTimeInMs;
+    const timeMs = previous < 0 ? 0 : previous;
+    seek(timeMs);
+  }, [seek, state]);
 
   return (
     <>
       <ControlBar
-        paused={audio.paused}
+        paused={state.paused}
         play={play}
-        pause={pause}
         forward={forward}
         rewind={rewind}
+        pause={pause}
       />
       <WeaveForms
         seek={seek}
-        wordTimingsOfPersonA={wordTimings[0]}
-        wordTimingsOfPersonB={wordTimings[1]}
-        currentTimeMs={audio.currentTimeMs}
-        durationMs={audio.durationMs}
+        wordTimingsOfPersonA={callerWordTimings.callerA}
+        wordTimingsOfPersonB={callerWordTimings.callerB}
+        currentTimeMs={state.currentTimeMs}
+        durationMs={state.durationMs}
       />
       <Transcript
         transcript={transcript}
         seekAudioTime={seek}
-        currentTimeMs={audio.currentTimeMs}
+        currentTimeMs={state.currentTimeMs}
       />
     </>
   );

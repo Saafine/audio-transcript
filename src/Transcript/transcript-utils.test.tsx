@@ -1,5 +1,5 @@
 import React from 'react';
-import { getTranscript } from './TranscriptService';
+import { getTranscript } from './transcript-utils';
 import { WordTiming } from '../core';
 
 test('maps time from transcript to milliseconds', () => {
