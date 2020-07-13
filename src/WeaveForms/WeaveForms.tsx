@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import WeaveProgress from './WeaveProgress';
 import {
   AUDIO_TRANSCRIBE_COLOR_PRIMARY,
@@ -42,15 +42,18 @@ function WeaveForms({
     setNoiseMarkersForPersonB(getNoiseMarkers(wordTimingsOfPersonB, weaveDuration));
   }, [wordTimingsOfPersonA, wordTimingsOfPersonB, weaveDuration]);
 
-  const seekOnWeaveForm = (event: React.MouseEvent) => {
-    const start = event.currentTarget.getBoundingClientRect().x;
-    const clicked = event.clientX;
-    const diff = ((clicked - start) / WEAVE_BAR_CONTAINER_WIDTH_PX) * durationMs;
-    seek(diff);
-  };
+  const seekOnWeaveForm = useCallback(
+    (event: React.MouseEvent) => {
+      const start = event.currentTarget.getBoundingClientRect().x;
+      const clicked = event.clientX;
+      const diff = ((clicked - start) / WEAVE_BAR_CONTAINER_WIDTH_PX) * durationMs;
+      seek(diff);
+    },
+    [durationMs, seek],
+  );
 
   return (
-    <div className="flex p-2" style={{ background: '#FAFBFC' }}>
+    <div className="flex" style={{ background: '#FAFBFC' }}>
       <div className="relative">
         <VoiceOwner color={AUDIO_TRANSCRIBE_COLOR_SECONDARY}>Brian Isaacson</VoiceOwner>
         <TimelineBase />

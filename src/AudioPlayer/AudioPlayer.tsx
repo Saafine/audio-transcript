@@ -9,6 +9,7 @@ import {
   AUDIO_PLAYER_ACTIONS_UPDATE_CURRENT_TIME_MS,
   AUDIO_PLAYER_ACTIONS_UPDATE_PAUSED,
 } from './audio-player.actions';
+import TimeProgress from '../TimeProgress/TimeProgress';
 
 function AudioPlayer() {
   const [state, dispatch] = useReducer(audioPlayerReducer, {
@@ -65,6 +66,7 @@ function AudioPlayer() {
         rewind={rewind}
         pause={pause}
       />
+      <TimeProgress currentTimeMs={state.currentTimeMs} durationMs={state.durationMs} />
       <WeaveForms
         seek={seek}
         wordTimingsOfPersonA={callerWordTimings.callerA}
