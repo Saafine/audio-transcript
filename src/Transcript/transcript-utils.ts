@@ -18,17 +18,23 @@ function mapTranscriptJsonToModel(transcriptJSON: TranscriptJSON): TranscriptMod
   };
 }
 
+function getMillisecondsFromText(ms: string): number {
+  let convertedMs = Number(ms);
+  if (convertedMs < 10) return convertedMs * 100;
+  if (convertedMs < 100) return convertedMs * 10;
+  return convertedMs;
+}
+
 function getTimeInMs(time: string): number {
   const seconds = Number(time.replace(/(\.\d+)?s/, ''));
   const msMatch = time.match(/(?<=\.)\d+/);
-  const milliseconds = msMatch ? Number(msMatch[0]) : 0;
+  const milliseconds = msMatch ? getMillisecondsFromText(msMatch[0]) : 0;
   return seconds * 1000 + milliseconds;
 }
 
 export function getWordTimingsForEachCaller(transcript: TranscriptModel): WordTimingsForCaller {
   const callerA = getWordTimings(transcript.wordTimings, (index) => !Boolean(index % 2));
   const callerB = getWordTimings(transcript.wordTimings, (index) => Boolean(index % 2));
-
   return { callerA, callerB };
 }
 
@@ -38,3 +44,16 @@ const getWordTimings: (
 ) => WordTiming[] = (wordTimings, filterFn) => {
   return wordTimings.filter((_, idx) => filterFn(idx)).flat();
 };
+
+export function getTimeSpentTalkingPercentage(
+  wordTimings: WordTiming[],
+  durationMs: number,
+): number {
+  if (!durationMs) return 0;
+  const getCallerTotal = (caller: WordTiming[]) =>
+    caller.reduce((total, { startTimeMs, endTimeMs }) => {
+      return total + endTimeMs - startTimeMs;
+    }, 0);
+
+  return Math.floor((getCallerTotal(wordTimings) / durationMs) * 100);
+}

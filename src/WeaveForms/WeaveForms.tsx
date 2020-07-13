@@ -14,6 +14,7 @@ import WeaveBars from './WeaveBars';
 import VoiceOwner from './VoiceOwner';
 import { getNoiseMarkers } from './noise-marking-utils';
 import { WordTiming } from '../Transcript/interfaces';
+import { getTimeSpentTalkingPercentage } from '../Transcript/transcript-utils';
 
 function WeaveForms({
   wordTimingsOfPersonA = [],
@@ -34,13 +35,24 @@ function WeaveForms({
   const weaveDuration = Math.floor(durationMs / weaveBarCount);
   const progressPositionPx = (currentTimeMs / durationMs) * WEAVE_BAR_CONTAINER_WIDTH_PX;
 
-  const [noiseMarkersForCallerA, setNoiseMarkersForPersonA] = useState<number[]>([]);
-  const [noiseMarkersForPersonB, setNoiseMarkersForPersonB] = useState<number[]>([]);
+  const [noiseMarkersForCallerA, setNoiseMarkersForCallerA] = useState<number[]>([]);
+  const [noiseMarkersForCallerB, setNoiseMarkersForCallerB] = useState<number[]>([]);
+  const [spentTalking, setTimeSpentTalking] = useState<{
+    callerA: number;
+    callerB: number;
+  }>({ callerA: 0, callerB: 0 });
 
   useEffect(() => {
-    setNoiseMarkersForPersonA(getNoiseMarkers(wordTimingsOfPersonA, weaveDuration));
-    setNoiseMarkersForPersonB(getNoiseMarkers(wordTimingsOfPersonB, weaveDuration));
+    setNoiseMarkersForCallerA(getNoiseMarkers(wordTimingsOfPersonA, weaveDuration));
+    setNoiseMarkersForCallerB(getNoiseMarkers(wordTimingsOfPersonB, weaveDuration));
   }, [wordTimingsOfPersonA, wordTimingsOfPersonB, weaveDuration]);
+
+  useEffect(() => {
+    setTimeSpentTalking({
+      callerA: getTimeSpentTalkingPercentage(wordTimingsOfPersonA, durationMs),
+      callerB: getTimeSpentTalkingPercentage(wordTimingsOfPersonB, durationMs),
+    });
+  }, [durationMs, wordTimingsOfPersonA, wordTimingsOfPersonB]);
 
   const seekOnWeaveForm = useCallback(
     (event: React.MouseEvent) => {
@@ -55,9 +67,11 @@ function WeaveForms({
   return (
     <div className="flex" style={{ background: '#FAFBFC' }}>
       <div className="relative">
-        <VoiceOwner color={AUDIO_TRANSCRIBE_COLOR_SECONDARY}>Brian Isaacson</VoiceOwner>
+        <VoiceOwner color={AUDIO_TRANSCRIBE_COLOR_SECONDARY}>
+          {spentTalking.callerA}% Brian Isaacson
+        </VoiceOwner>
         <TimelineBase />
-        <VoiceOwner color={AUDIO_TRANSCRIBE_COLOR_PRIMARY}>YOU</VoiceOwner>
+        <VoiceOwner color={AUDIO_TRANSCRIBE_COLOR_PRIMARY}>{spentTalking.callerB}% YOU</VoiceOwner>
       </div>
 
       <div className="relative" onClick={seekOnWeaveForm}>
@@ -84,7 +98,7 @@ function WeaveForms({
           spaceBetweenBarsPx={WEAVE_BAR_SPACE_BETWEEN_PX}
           barColor={AUDIO_TRANSCRIBE_COLOR_PRIMARY}
           progressPositionPx={progressPositionPx}
-          noiseMarkers={noiseMarkersForPersonB}
+          noiseMarkers={noiseMarkersForCallerB}
         />
       </div>
     </div>

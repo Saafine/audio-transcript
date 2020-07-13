@@ -34,6 +34,16 @@ test('maps time from transcript to milliseconds', () => {
       endTime: '4.100s',
       word: 'f',
     },
+    {
+      startTime: '12.0s',
+      endTime: '12.800s',
+      word: 'g',
+    },
+    {
+      startTime: '12.800s',
+      endTime: '12.9s',
+      word: 'h',
+    },
   ];
 
   const outputWordTimings: Array<WordTiming[]> = [
@@ -44,6 +54,8 @@ test('maps time from transcript to milliseconds', () => {
       { startTimeMs: 12800, endTimeMs: 12900, word: 'd' },
       { startTimeMs: 12000, endTimeMs: 12800, word: 'e' },
       { startTimeMs: 3900, endTimeMs: 4100, word: 'f' },
+      { startTimeMs: 12_000, endTimeMs: 12_800, word: 'g' },
+      { startTimeMs: 12_800, endTimeMs: 12_900, word: 'h' },
     ],
   ];
 
