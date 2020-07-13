@@ -3,7 +3,9 @@
 - smooth animation / perf improvements (filterFn)
 - animate words transition in transcription
 - ghost space
+- filtering doesnt preserve color
 - add tests
+- dynamic timeline resizing
 
 ## Available Scripts
 

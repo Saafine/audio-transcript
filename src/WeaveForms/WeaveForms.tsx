@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import WeaveProgress from './WeaveProgress';
 import {
   AUDIO_TRANSCRIBE_COLOR_PRIMARY,
   AUDIO_TRANSCRIBE_COLOR_SECONDARY,
-  WEAVE_BAR_CONTAINER_WIDTH_PX,
   WEAVE_BAR_HEIGHT_PX,
   WEAVE_BAR_SPACE_BETWEEN_PX,
   WEAVE_BAR_WIDTH_PX,
@@ -29,11 +28,13 @@ function WeaveForms({
   durationMs: number;
   seek: (timeMs: number) => void;
 }) {
+  const buttonRef: any = useRef();
+  const weaveBarWidth = buttonRef.current?.offsetWidth;
   const weaveBarCount = Math.floor(
-    WEAVE_BAR_CONTAINER_WIDTH_PX / (WEAVE_BAR_WIDTH_PX + 2 * WEAVE_BAR_SPACE_BETWEEN_PX),
+    weaveBarWidth / (WEAVE_BAR_WIDTH_PX + 2 * WEAVE_BAR_SPACE_BETWEEN_PX),
   );
   const weaveDuration = Math.floor(durationMs / weaveBarCount);
-  const progressPositionPx = (currentTimeMs / durationMs) * WEAVE_BAR_CONTAINER_WIDTH_PX;
+  const progressPositionPx = (currentTimeMs / durationMs) * weaveBarWidth;
 
   const [noiseMarkersForCallerA, setNoiseMarkersForCallerA] = useState<number[]>([]);
   const [noiseMarkersForCallerB, setNoiseMarkersForCallerB] = useState<number[]>([]);
@@ -58,14 +59,17 @@ function WeaveForms({
     (event: React.MouseEvent) => {
       const start = event.currentTarget.getBoundingClientRect().x;
       const clicked = event.clientX;
-      const diff = ((clicked - start) / WEAVE_BAR_CONTAINER_WIDTH_PX) * durationMs;
+      const diff = ((clicked - start) / weaveBarWidth) * durationMs;
       seek(diff);
     },
-    [durationMs, seek],
+    [durationMs, seek, weaveBarWidth],
   );
 
   return (
-    <div className="flex" style={{ background: '#FAFBFC', padding: '20px 20px', borderBottom: "1px solid #DFE2E5" }}>
+    <div
+      className="flex"
+      style={{ background: '#FAFBFC', padding: '20px 20px', borderBottom: '1px solid #DFE2E5' }}
+    >
       <div className="relative">
         <VoiceOwner color={AUDIO_TRANSCRIBE_COLOR_SECONDARY}>
           <div style={{ width: '35px' }}>{spentTalking.callerA}%</div> Brian Isaacson
@@ -76,27 +80,24 @@ function WeaveForms({
         </VoiceOwner>
       </div>
 
-      <div className="relative" onClick={seekOnWeaveForm}>
+      <div className="relative" style={{ width: '100%' }} onClick={seekOnWeaveForm} ref={buttonRef}>
         <WeaveProgress progressPosition={progressPositionPx} />
         <WeaveBars
           weaveBarHeightPx={WEAVE_BAR_HEIGHT_PX}
           weaveBarWidthPx={WEAVE_BAR_WIDTH_PX}
-          containerWidthPx={WEAVE_BAR_CONTAINER_WIDTH_PX}
+          containerWidthPx={weaveBarWidth}
           spaceBetweenBarsPx={WEAVE_BAR_SPACE_BETWEEN_PX}
           progressPositionPx={progressPositionPx}
           barColor={AUDIO_TRANSCRIBE_COLOR_SECONDARY}
           noiseMarkers={noiseMarkersForCallerA}
         />
 
-        <Timeline
-          progressPosition={progressPositionPx}
-          containerWidthPx={WEAVE_BAR_CONTAINER_WIDTH_PX}
-        />
+        <Timeline progressPosition={progressPositionPx} containerWidthPx={weaveBarWidth} />
 
         <WeaveBars
           weaveBarHeightPx={WEAVE_BAR_HEIGHT_PX}
           weaveBarWidthPx={WEAVE_BAR_WIDTH_PX}
-          containerWidthPx={WEAVE_BAR_CONTAINER_WIDTH_PX}
+          containerWidthPx={weaveBarWidth}
           spaceBetweenBarsPx={WEAVE_BAR_SPACE_BETWEEN_PX}
           barColor={AUDIO_TRANSCRIBE_COLOR_PRIMARY}
           progressPositionPx={progressPositionPx}
