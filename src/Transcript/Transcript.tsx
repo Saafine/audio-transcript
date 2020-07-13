@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Transcript.scss';
 import TranscriptBlock from './TranscriptBlock';
 import { AUDIO_TRANSCRIBE_COLOR_PRIMARY, AUDIO_TRANSCRIBE_COLOR_SECONDARY } from '../App.theme';
-import { TranscriptModel } from './interfaces';
+import { TranscriptModel, WordTiming } from './interfaces';
 
 function Transcript({
   transcript,
@@ -13,16 +13,35 @@ function Transcript({
   currentTimeMs: number;
   seekAudioTime: (timeMs: number) => void;
 }): any {
-  return transcript.wordTimings.map((wordTimings, index) => (
-    <div className="transcript" key={index}>
-      <TranscriptBlock
-        color={index % 2 === 0 ? AUDIO_TRANSCRIBE_COLOR_SECONDARY : AUDIO_TRANSCRIBE_COLOR_PRIMARY}
-        seekAudioTime={seekAudioTime}
-        wordTimings={wordTimings}
-        currentTimeMs={currentTimeMs}
+  const [search, setSearch] = useState('');
+
+  const filterFn = (_: WordTiming[], index: number) => {
+    return transcript.transcriptText[index].includes(search);
+  };
+
+  return (
+    <>
+      <input
+        type="input"
+        className="transcript__search"
+        aria-label="search call transcript"
+        placeholder="Search call transcript"
+        onChange={(event) => setSearch(event.target.value)}
       />
-    </div>
-  ));
+      {transcript.wordTimings.filter(filterFn).map((wordTimings, index) => (
+        <div className="transcript" key={index}>
+          <TranscriptBlock
+            color={
+              index % 2 === 0 ? AUDIO_TRANSCRIBE_COLOR_SECONDARY : AUDIO_TRANSCRIBE_COLOR_PRIMARY
+            }
+            seekAudioTime={seekAudioTime}
+            wordTimings={wordTimings}
+            currentTimeMs={currentTimeMs}
+          />
+        </div>
+      ))}
+    </>
+  );
 }
 
 export default Transcript;

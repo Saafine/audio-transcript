@@ -7,6 +7,15 @@
   }
 
   &:hover {
-    background: #F6FBFE;
+    background: #f6fbfe;
+  }
+
+  &__search {
+    padding: 8px;
+    border: 1px solid #eaedf1;
+    border-radius: 6px;
+    width: 100%;
+    max-width: 450px;
+    padding-left: 35px;
   }
 }
