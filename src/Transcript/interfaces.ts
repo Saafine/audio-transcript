@@ -22,5 +22,5 @@ export interface IdentifiedWordTiming {
 
 export interface TranscriptModel {
   transcriptText: string[];
-  wordTimings: IdentifiedWordTiming[];
+  callerTimings: IdentifiedWordTiming[];
 }

@@ -9,7 +9,7 @@ export interface WordTimingsForCaller {
 
 export function useTranscript(): [TranscriptModel, WordTimingsForCaller] {
   const [transcript, setTranscript] = useState<TranscriptModel>({
-    wordTimings: [],
+    callerTimings: [],
     transcriptText: [],
   });
 

@@ -8,8 +8,8 @@ export function getTranscript(transcriptJSON = TRANSCRIPT_JSON): TranscriptModel
 
 function mapTranscriptJsonToModel(transcriptJSON: TranscriptJSON): TranscriptModel {
   return {
-    // TODO [P. Labus] callersTimings
-    wordTimings: transcriptJSON.word_timings.map((wordTimings, index) => {
+    transcriptText: transcriptJSON.transcript_text,
+    callerTimings: transcriptJSON.word_timings.map((wordTimings, index) => {
       return {
         timings: wordTimings.map(({ word, endTime, startTime }) => ({
           word: word,
@@ -19,7 +19,6 @@ function mapTranscriptJsonToModel(transcriptJSON: TranscriptJSON): TranscriptMod
         callerId: index % 2,
       };
     }),
-    transcriptText: transcriptJSON.transcript_text,
   };
 }
 
@@ -47,11 +46,11 @@ function getTimeInMs(time: string): number {
 
 export function getWordTimingsForEachCaller(transcript: TranscriptModel): WordTimingsForCaller {
   return {
-    callerA: transcript.wordTimings
+    callerA: transcript.callerTimings
       .filter(({ callerId }) => isCallerA(callerId))
       .map(({ timings }) => timings)
       .flat(),
-    callerB: transcript.wordTimings
+    callerB: transcript.callerTimings
       .filter(({ callerId }) => isCallerB(callerId))
       .map(({ timings }) => timings)
       .flat(),

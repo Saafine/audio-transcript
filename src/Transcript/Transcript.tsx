@@ -29,7 +29,7 @@ function Transcript({
         placeholder="Search call transcript"
         onChange={(event) => setSearch(event.target.value)}
       />
-      {transcript.wordTimings.filter(filterFn).map((wordTimings, index) => (
+      {transcript.callerTimings.filter(filterFn).map((wordTimings, index) => (
         <div className="transcript" key={index}>
           <TranscriptBlock
             color={

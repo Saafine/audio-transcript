@@ -64,5 +64,5 @@ test('maps time from transcript to milliseconds', () => {
     transcript_text: [],
   });
 
-  expect(result.wordTimings).toEqual(outputWordTimings);
+  expect(result.callerTimings).toEqual(outputWordTimings);
 });
