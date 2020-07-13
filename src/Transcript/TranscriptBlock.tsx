@@ -18,8 +18,8 @@ function TranscriptBlock({
   };
 
   return (
-    <div className="flex">
-      <div className="font-semibold pr-3" style={{ color, borderRight: `3px solid ${color}` }}>
+    <div className="flex p-5 transcript-block">
+      <div className="font-semibold pr-3" style={{ color, borderRight: `2px solid ${color}` }}>
         03:25
       </div>
       <div className="pl-3" style={{ maxWidth: '650px' }}>

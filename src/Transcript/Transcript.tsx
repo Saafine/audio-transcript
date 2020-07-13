@@ -14,9 +14,9 @@ function Transcript({
   seekAudioTime: (timeMs: number) => void;
 }): any {
   return transcript.wordTimings.map((wordTimings, index) => (
-    <div className="transcript-block" key={index}>
+    <div className="transcript" key={index}>
       <TranscriptBlock
-        color={index % 2 === 0 ? AUDIO_TRANSCRIBE_COLOR_PRIMARY : AUDIO_TRANSCRIBE_COLOR_SECONDARY}
+        color={index % 2 === 0 ? AUDIO_TRANSCRIBE_COLOR_SECONDARY : AUDIO_TRANSCRIBE_COLOR_PRIMARY}
         seekAudioTime={seekAudioTime}
         wordTimings={wordTimings}
         currentTimeMs={currentTimeMs}

@@ -1,4 +1,5 @@
 # todo:
+- ghost space
 - seekOnWeaveForm callback?
 - add / remove tests
 // TODO [P. Labus] smooth animation
