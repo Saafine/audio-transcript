@@ -1,11 +1,5 @@
-# todo:
-
-- smooth animation / perf improvements (filterFn)
-- animate words transition in transcription
-- ghost space
-- filtering doesnt preserve color
-- add tests
-- dynamic timeline resizing
+# Demo
+https://vibrant-brahmagupta-9327da.netlify.app/
 
 ## Available Scripts
 
@@ -28,3 +22,12 @@ See the section about [running tests](https://facebook.github.io/create-react-ap
 Builds the app for production to the `build` folder.<br />
 It correctly bundles React in production mode and optimizes the build for the best performance.
 The build is minified and the filenames include the hashes.<br />
+
+
+# todo:
+- smooth animation / perf improvements (filterFn)
+- animate words transition in transcription
+- ghost space
+- filtering doesnt preserve color
+- add tests
+- dynamic timeline resizing
