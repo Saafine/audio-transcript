@@ -1,8 +1,8 @@
 # todo:
-
+- css fixes
 - ghost space
-- add / remove tests
-- smooth animation
+- add tests
+- smooth animation / perf improvements
 
 ## Available Scripts
 
