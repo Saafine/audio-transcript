@@ -23,11 +23,11 @@ function mapTranscriptJsonToModel(transcriptJSON: TranscriptJSON): TranscriptMod
 }
 
 export function isCallerA(callerId: number): boolean {
-  return Boolean(callerId % 2);
+  return !(callerId % 2);
 }
 
 export function isCallerB(callerId: number): boolean {
-  return !(callerId % 2);
+  return Boolean(callerId % 2);
 }
 
 function getMillisecondsFromText(ms: string): number {

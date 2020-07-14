@@ -34,8 +34,8 @@ function Transcript({
           <TranscriptBlock
             color={
               isCallerA(wordTimings.callerId)
-                ? AUDIO_TRANSCRIBE_COLOR_PRIMARY
-                : AUDIO_TRANSCRIBE_COLOR_SECONDARY
+                ? AUDIO_TRANSCRIBE_COLOR_SECONDARY
+                : AUDIO_TRANSCRIBE_COLOR_PRIMARY
             }
             seekAudioTime={seekAudioTime}
             wordTimings={wordTimings.timings}
