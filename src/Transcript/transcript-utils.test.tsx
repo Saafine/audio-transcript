@@ -1,9 +1,9 @@
 import React from 'react';
 import { getTranscript } from './transcript-utils';
-import { WordTiming } from './interfaces';
+import { WordTiming, WordTimingJson } from './interfaces';
 
 test('maps time from transcript to milliseconds', () => {
-  const inputWordTimings = [
+  const inputWordTimings: WordTimingJson[] = [
     {
       startTime: '2.400s',
       endTime: '2.800s',
@@ -64,5 +64,5 @@ test('maps time from transcript to milliseconds', () => {
     transcript_text: [],
   });
 
-  expect(result.callerTimings).toEqual(outputWordTimings);
+  expect(result.callerTimings.map((x) => x.timings)).toEqual(outputWordTimings);
 });
