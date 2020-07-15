@@ -6,7 +6,9 @@ import {
 } from './audio-player.actions';
 
 export function useAudio(src: HTMLAudioElement, dispatch: Dispatch<AudioAction>) {
-  const [audioInstance] = useState(new Audio('./59e106639d79684277df770d.wav'));
+  const [audioInstance] = useState(() => {
+    return new Audio('./59e106639d79684277df770d.wav');
+  });
 
   useEffect(() => {
     const canPlay = () => {

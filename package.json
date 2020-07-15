@@ -49,6 +49,7 @@
     "eslint-plugin-react": "^7.20.3",
     "eslint-plugin-standard": "^4.0.1",
     "postcss-cli": "^7.1.1",
-    "prettier": "^2.0.5"
+    "prettier": "^2.0.5",
+    "use-resize-observer": "^6.1.0"
   }
 }

@@ -20,7 +20,7 @@ function AudioPlayer() {
     speed: '1.0x',
   });
 
-  const [transcript, callerWordTimings] = useTranscript();
+  const [transcript, wordTimings] = useTranscript();
   const audioInstance = useAudio(new Audio('./59e106639d79684277df770d.wav'), dispatch);
 
   const pause = useCallback(() => {
@@ -86,8 +86,8 @@ function AudioPlayer() {
       </div>
       <WeaveForms
         seek={seek}
-        wordTimingsOfPersonA={callerWordTimings.callerA}
-        wordTimingsOfPersonB={callerWordTimings.callerB}
+        wordTimingsOfPersonA={wordTimings.callerA}
+        wordTimingsOfPersonB={wordTimings.callerB}
         currentTimeMs={state.currentTimeMs}
         durationMs={state.durationMs}
       />
