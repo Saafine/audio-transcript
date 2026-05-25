@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Transcript.scss';
 import TranscriptBlock from './TranscriptBlock';
 import { AUDIO_TRANSCRIBE_COLOR_PRIMARY, AUDIO_TRANSCRIBE_COLOR_SECONDARY } from '../App.theme';
-import { TranscriptModel } from './interfaces';
+import { IdentifiedWordTiming, TranscriptModel } from './interfaces';
 import { isCallerA } from './transcript-utils';
 
 function Transcript({
@@ -13,11 +13,11 @@ function Transcript({
   transcript: TranscriptModel;
   currentTimeMs: number;
   seekAudioTime: (timeMs: number) => void;
-}): any {
+}): JSX.Element {
   const [search, setSearch] = useState('');
 
-  const filterFn = (_: any, index: number) => {
-    return transcript.transcriptText[index].includes(search);
+  const filterFn = (_: IdentifiedWordTiming, index: number) => {
+    return (transcript.transcriptText[index] ?? '').includes(search);
   };
 
   return (

@@ -21,6 +21,8 @@ function TranscriptBlock({
     [currentTimeMs],
   );
 
+  if (wordTimings.length === 0) return null;
+
   return (
     <div className="flex p-5 transcript-block">
       <div className="font-semibold pr-3" style={{ color, borderRight: `2px solid ${color}` }}>

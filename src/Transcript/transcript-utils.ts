@@ -30,11 +30,11 @@ export function isCallerB(callerId: number): boolean {
   return Boolean(callerId % 2);
 }
 
-function getMillisecondsFromText(ms: string): number {
-  let convertedMs = Number(ms);
-  if (convertedMs < 10) return convertedMs * 100;
-  if (convertedMs < 100) return convertedMs * 10;
-  return convertedMs;
+function getMillisecondsFromText(fraction: string): number {
+  // Interpret the digits after the decimal point positionally (tenths,
+  // hundredths, thousandths) rather than by numeric value, so leading zeros
+  // are preserved: ".5" -> 500ms, ".05" -> 50ms, ".005" -> 5ms.
+  return Number((fraction + '000').slice(0, 3));
 }
 
 function getTimeInMs(time: string): number {

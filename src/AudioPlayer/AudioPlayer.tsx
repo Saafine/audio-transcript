@@ -21,7 +21,7 @@ function AudioPlayer() {
   });
 
   const [transcript, wordTimings] = useTranscript();
-  const audioInstance = useAudio(new Audio('./59e106639d79684277df770d.wav'), dispatch);
+  const audioInstance = useAudio(dispatch);
 
   const pause = useCallback(() => {
     audioInstance.pause();
@@ -35,11 +35,10 @@ function AudioPlayer() {
 
   const seek = useCallback(
     (timeMs: number) => {
-      const time = timeMs / 1000;
-      audioInstance.currentTime = time;
+      audioInstance.currentTime = timeMs / 1000;
       dispatch({
         type: AUDIO_PLAYER_ACTIONS_UPDATE_CURRENT_TIME_MS,
-        payload: time,
+        payload: timeMs,
       });
     },
     [audioInstance],

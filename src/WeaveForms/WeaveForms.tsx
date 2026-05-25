@@ -57,7 +57,7 @@ function WeaveForms({
     const weaveBarCount = Math.floor(
       containerWidthPx / (WEAVE_BAR_WIDTH_PX + 2 * WEAVE_BAR_SPACE_BETWEEN_PX),
     );
-    const weaveBarDurationMs = Math.floor(durationMs / weaveBarCount);
+    const weaveBarDurationMs = weaveBarCount > 0 ? Math.floor(durationMs / weaveBarCount) : 0;
 
     dispatch({
       type: WEAVE_FORM_ACTIONS_UPDATE_WEAVE_BAR,
@@ -71,7 +71,7 @@ function WeaveForms({
   useEffect(() => {
     dispatch({
       type: WEAVE_FORM_ACTIONS_UPDATE_PROGRESS_POSITION_PX,
-      payload: (currentTimeMs / durationMs) * containerWidthPx,
+      payload: durationMs > 0 ? (currentTimeMs / durationMs) * containerWidthPx : 0,
     });
   }, [containerWidthPx, currentTimeMs, durationMs]);
 
