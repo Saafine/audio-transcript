@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { getTranscript, getWordTimingsForEachCaller } from '../Transcript/transcript-utils';
 import { TranscriptModel, WordTiming } from '../Transcript/interfaces';
 
@@ -8,23 +8,10 @@ export interface WordTimingsForCaller {
 }
 
 export function useTranscript(): [TranscriptModel, WordTimingsForCaller] {
-  const [transcript, setTranscript] = useState<TranscriptModel>({
-    callerTimings: [],
-    transcriptText: [],
-  });
-
-  const [wordTimings, setWordTimings] = useState<WordTimingsForCaller>({
-    callerA: [],
-    callerB: [],
-  });
-
-  useEffect(() => {
-    const transcriptModel = getTranscript();
-    const { callerA, callerB } = getWordTimingsForEachCaller(transcriptModel);
-    setTranscript(transcriptModel);
-    setWordTimings({ callerA, callerB });
-    // eslint-disable-next-line
-  }, []);
+  // The transcript is a statically-imported JSON asset, so this is a synchronous,
+  // pure derivation — compute it during render rather than in an effect.
+  const transcript = useMemo(() => getTranscript(), []);
+  const wordTimings = useMemo(() => getWordTimingsForEachCaller(transcript), [transcript]);
 
   return [transcript, wordTimings];
 }

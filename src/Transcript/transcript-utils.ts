@@ -1,5 +1,5 @@
 import TRANSCRIPT_JSON from './transcript.json';
-import { TranscriptJSON, TranscriptModel, WordTiming } from './interfaces';
+import { IdentifiedWordTiming, TranscriptJSON, TranscriptModel, WordTiming } from './interfaces';
 import { WordTimingsForCaller } from '../AudioPlayer/useTranscript';
 
 export function getTranscript(transcriptJSON = TRANSCRIPT_JSON): TranscriptModel {
@@ -55,6 +55,32 @@ export function getWordTimingsForEachCaller(transcript: TranscriptModel): WordTi
       .map(({ timings }) => timings)
       .flat(),
   };
+}
+
+export function getWordKey({ startTimeMs, endTimeMs }: WordTiming): string {
+  return startTimeMs + ' ' + endTimeMs;
+}
+
+export interface ActiveWord {
+  block: IdentifiedWordTiming | null;
+  wordKey: string | null;
+}
+
+// Find the single word being spoken at currentTimeMs. Computing this once (rather
+// than re-checking inside every block on every tick) lets blocks be memoized so
+// only the block containing the active word re-renders, and only on word changes.
+export function findActiveWord(
+  callerTimings: IdentifiedWordTiming[],
+  currentTimeMs: number,
+): ActiveWord {
+  for (const block of callerTimings) {
+    for (const timing of block.timings) {
+      if (timing.startTimeMs <= currentTimeMs && currentTimeMs < timing.endTimeMs) {
+        return { block, wordKey: getWordKey(timing) };
+      }
+    }
+  }
+  return { block: null, wordKey: null };
 }
 
 export function getTimeSpentTalkingPercentage(

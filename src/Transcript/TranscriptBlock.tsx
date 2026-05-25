@@ -1,26 +1,20 @@
-import React, { useCallback } from 'react';
+import React, { memo } from 'react';
 import './TranscriptBlock.scss';
 import { WordTiming } from './interfaces';
 import { getMinutesFormatted } from '../TimeProgress/time.utils';
+import { getWordKey } from './transcript-utils';
 
 function TranscriptBlock({
   wordTimings,
-  currentTimeMs,
+  activeWordKey,
   seekAudioTime,
   color,
 }: {
   wordTimings: WordTiming[];
-  currentTimeMs: number;
+  activeWordKey: string | null;
   seekAudioTime: (timeMs: number) => void;
   color: string;
 }) {
-  const shouldHighlight = useCallback(
-    (startTimeMs: number, endTimeMs: number): boolean => {
-      return startTimeMs <= currentTimeMs && currentTimeMs < endTimeMs;
-    },
-    [currentTimeMs],
-  );
-
   if (wordTimings.length === 0) return null;
 
   return (
@@ -29,20 +23,23 @@ function TranscriptBlock({
         {getMinutesFormatted(wordTimings[0].startTimeMs)}
       </div>
       <div className="pl-3" style={{ maxWidth: '650px' }}>
-        {wordTimings.map(({ word, startTimeMs, endTimeMs }) => (
-          <React.Fragment key={startTimeMs + ' ' + endTimeMs}>
-            <span
-              onClick={() => seekAudioTime(startTimeMs)}
-              className={shouldHighlight(startTimeMs, endTimeMs) ? 'highlight' : ''}
-            >
-              {word}
-            </span>
-            <span> </span>
-          </React.Fragment>
-        ))}
+        {wordTimings.map((timing) => {
+          const key = getWordKey(timing);
+          return (
+            <React.Fragment key={key}>
+              <span
+                onClick={() => seekAudioTime(timing.startTimeMs)}
+                className={key === activeWordKey ? 'highlight' : ''}
+              >
+                {timing.word}
+              </span>
+              <span> </span>
+            </React.Fragment>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-export default TranscriptBlock;
+export default memo(TranscriptBlock);

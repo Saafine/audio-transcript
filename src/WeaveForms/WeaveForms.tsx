@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useReducer } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   AUDIO_TRANSCRIBE_COLOR_PRIMARY,
   AUDIO_TRANSCRIBE_COLOR_SECONDARY,
@@ -14,13 +14,6 @@ import WeaveProgress from './WeaveProgress';
 import WeaveBars from './WeaveBars';
 import Timeline from './Timeline';
 import useResizeObserver from 'use-resize-observer';
-import { weaveFormReducer } from '../Transcript/weave-forms.reducer';
-import {
-  WEAVE_FORM_ACTIONS_UPDATE_NOISE_MARKERS,
-  WEAVE_FORM_ACTIONS_UPDATE_PROGRESS_POSITION_PX,
-  WEAVE_FORM_ACTIONS_UPDATE_TIME_SPENT_TALKING,
-  WEAVE_FORM_ACTIONS_UPDATE_WEAVE_BAR,
-} from '../Transcript/weave-forms.actions';
 import { getTimeSpentTalkingPercentage } from '../Transcript/transcript-utils';
 
 function WeaveForms({
@@ -37,63 +30,34 @@ function WeaveForms({
   seek: (timeMs: number) => void;
 }) {
   const { ref, width: containerWidthPx = 0 } = useResizeObserver<HTMLDivElement>();
-  const [state, dispatch] = useReducer(weaveFormReducer, {
-    progressPositionPx: 0,
-    weaveBar: {
-      count: 0,
-      durationMs: 0,
-    },
-    timeSpentTalking: {
-      callerA: 0,
-      callerB: 0,
-    },
-    noiseMarkers: {
-      callerA: [],
-      callerB: [],
-    },
-  });
 
-  useEffect(() => {
-    const weaveBarCount = Math.floor(
-      containerWidthPx / (WEAVE_BAR_WIDTH_PX + 2 * WEAVE_BAR_SPACE_BETWEEN_PX),
-    );
-    const weaveBarDurationMs = weaveBarCount > 0 ? Math.floor(durationMs / weaveBarCount) : 0;
-
-    dispatch({
-      type: WEAVE_FORM_ACTIONS_UPDATE_WEAVE_BAR,
-      payload: {
-        count: weaveBarCount,
-        durationMs: weaveBarDurationMs,
-      },
-    });
+  // Everything below is derived purely from props — compute during render so a
+  // changing currentTimeMs doesn't trigger a second render via effect + dispatch.
+  const weaveBar = useMemo(() => {
+    const count = Math.floor(containerWidthPx / (WEAVE_BAR_WIDTH_PX + 2 * WEAVE_BAR_SPACE_BETWEEN_PX));
+    return {
+      count,
+      durationMs: count > 0 ? Math.floor(durationMs / count) : 0,
+    };
   }, [durationMs, containerWidthPx]);
 
-  useEffect(() => {
-    dispatch({
-      type: WEAVE_FORM_ACTIONS_UPDATE_PROGRESS_POSITION_PX,
-      payload: durationMs > 0 ? (currentTimeMs / durationMs) * containerWidthPx : 0,
-    });
-  }, [containerWidthPx, currentTimeMs, durationMs]);
+  const progressPositionPx = durationMs > 0 ? (currentTimeMs / durationMs) * containerWidthPx : 0;
 
-  useEffect(() => {
-    dispatch({
-      type: WEAVE_FORM_ACTIONS_UPDATE_TIME_SPENT_TALKING,
-      payload: {
-        callerA: getTimeSpentTalkingPercentage(wordTimingsOfPersonA, durationMs),
-        callerB: getTimeSpentTalkingPercentage(wordTimingsOfPersonB, durationMs),
-      },
-    });
-  }, [durationMs, wordTimingsOfPersonA, wordTimingsOfPersonB]);
+  const timeSpentTalking = useMemo(
+    () => ({
+      callerA: getTimeSpentTalkingPercentage(wordTimingsOfPersonA, durationMs),
+      callerB: getTimeSpentTalkingPercentage(wordTimingsOfPersonB, durationMs),
+    }),
+    [durationMs, wordTimingsOfPersonA, wordTimingsOfPersonB],
+  );
 
-  useEffect(() => {
-    dispatch({
-      type: WEAVE_FORM_ACTIONS_UPDATE_NOISE_MARKERS,
-      payload: {
-        callerA: getNoiseMarkers(wordTimingsOfPersonA, state.weaveBar.durationMs),
-        callerB: getNoiseMarkers(wordTimingsOfPersonB, state.weaveBar.durationMs),
-      },
-    });
-  }, [wordTimingsOfPersonA, wordTimingsOfPersonB, state.weaveBar.durationMs]);
+  const noiseMarkers = useMemo(
+    () => ({
+      callerA: getNoiseMarkers(wordTimingsOfPersonA, weaveBar.durationMs),
+      callerB: getNoiseMarkers(wordTimingsOfPersonB, weaveBar.durationMs),
+    }),
+    [wordTimingsOfPersonA, wordTimingsOfPersonB, weaveBar.durationMs],
+  );
 
   const seekOnWeaveForm = useCallback(
     (event: React.MouseEvent) => {
@@ -112,27 +76,27 @@ function WeaveForms({
     >
       <div className="relative">
         <VoiceOwner color={AUDIO_TRANSCRIBE_COLOR_SECONDARY}>
-          <div style={{ width: '35px' }}>{state.timeSpentTalking.callerA}%</div> Brian Isaacson
+          <div style={{ width: '35px' }}>{timeSpentTalking.callerA}%</div> Brian Isaacson
         </VoiceOwner>
         <TimelineBase />
         <VoiceOwner color={AUDIO_TRANSCRIBE_COLOR_PRIMARY}>
-          <div style={{ width: '35px' }}>{state.timeSpentTalking.callerB}%</div> YOU
+          <div style={{ width: '35px' }}>{timeSpentTalking.callerB}%</div> YOU
         </VoiceOwner>
       </div>
 
       <div className="relative" style={{ width: '100%' }} onClick={seekOnWeaveForm} ref={ref}>
-        <WeaveProgress progressPosition={state.progressPositionPx} />
+        <WeaveProgress progressPosition={progressPositionPx} />
         <WeaveBars
           weaveBarHeightPx={WEAVE_BAR_HEIGHT_PX}
           weaveBarWidthPx={WEAVE_BAR_WIDTH_PX}
           containerWidthPx={containerWidthPx}
           spaceBetweenBarsPx={WEAVE_BAR_SPACE_BETWEEN_PX}
-          progressPositionPx={state.progressPositionPx}
+          progressPositionPx={progressPositionPx}
           barColor={AUDIO_TRANSCRIBE_COLOR_SECONDARY}
-          noiseMarkers={state.noiseMarkers.callerA}
+          noiseMarkers={noiseMarkers.callerA}
         />
 
-        <Timeline progressPosition={state.progressPositionPx} containerWidthPx={containerWidthPx} />
+        <Timeline progressPosition={progressPositionPx} containerWidthPx={containerWidthPx} />
 
         <WeaveBars
           weaveBarHeightPx={WEAVE_BAR_HEIGHT_PX}
@@ -140,8 +104,8 @@ function WeaveForms({
           containerWidthPx={containerWidthPx}
           spaceBetweenBarsPx={WEAVE_BAR_SPACE_BETWEEN_PX}
           barColor={AUDIO_TRANSCRIBE_COLOR_PRIMARY}
-          progressPositionPx={state.progressPositionPx}
-          noiseMarkers={state.noiseMarkers.callerB}
+          progressPositionPx={progressPositionPx}
+          noiseMarkers={noiseMarkers.callerB}
         />
       </div>
     </div>

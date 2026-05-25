@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import './ControlBar.scss';
 import { ReactComponent as Rewind } from './rewind.svg';
 import { ReactComponent as FastForward } from './fastforward.svg';
@@ -41,4 +41,4 @@ export function ControlBar({
   );
 }
 
-export default ControlBar;
+export default memo(ControlBar);

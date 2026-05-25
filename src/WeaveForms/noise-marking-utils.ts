@@ -3,29 +3,14 @@ import { WordTiming } from '../Transcript/interfaces';
 export function getNoiseMarkers(wordTimings: WordTiming[], weaveDuration: number): number[] {
   if (!weaveDuration || !wordTimings) return [];
 
-  const noiseMarkers = wordTimings.reduce((noiseMarkers, wordTiming) => {
-    return {
-      ...noiseMarkers,
-      ...getNoiseMarkerForTiming(wordTiming, weaveDuration),
-    };
-  }, {});
+  const bars = new Set<number>();
 
-  return Object.keys(noiseMarkers).map(Number);
-}
-
-function getNoiseMarkerForTiming(
-  { startTimeMs, endTimeMs }: WordTiming,
-  weaveDuration: number,
-): Record<string, true> {
-  const noiseMarkers: Record<string, true> = {};
-
-  let barIndex = Math.floor(startTimeMs / weaveDuration);
-  const endBarIndex = Math.floor(endTimeMs / weaveDuration);
-
-  while (barIndex <= endBarIndex) {
-    noiseMarkers[barIndex] = true;
-    barIndex++;
+  for (const { startTimeMs, endTimeMs } of wordTimings) {
+    const endBarIndex = Math.floor(endTimeMs / weaveDuration);
+    for (let barIndex = Math.floor(startTimeMs / weaveDuration); barIndex <= endBarIndex; barIndex++) {
+      bars.add(barIndex);
+    }
   }
 
-  return noiseMarkers;
+  return Array.from(bars);
 }

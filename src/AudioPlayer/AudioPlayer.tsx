@@ -44,19 +44,20 @@ function AudioPlayer() {
     [audioInstance],
   );
 
+  // Read the live time from the audio element (the source of truth) at click
+  // time instead of closing over state.currentTimeMs, so these callbacks stay
+  // stable across timeupdate ticks and don't force ControlBar to re-render.
   const forward = useCallback(() => {
-    const forwardTimeInSeconds = 10 * 1000;
-    const next = state.currentTimeMs + forwardTimeInSeconds;
-    const timeMs = next > state.durationMs ? state.durationMs : next;
-    seek(timeMs);
-  }, [seek, state]);
+    const skipMs = 10 * 1000;
+    const next = audioInstance.currentTime * 1000 + skipMs;
+    seek(next > state.durationMs ? state.durationMs : next);
+  }, [seek, audioInstance, state.durationMs]);
 
   const rewind = useCallback(() => {
-    const rewindTimeInMs = 10 * 1000;
-    const previous = state.currentTimeMs - rewindTimeInMs;
-    const timeMs = previous < 0 ? 0 : previous;
-    seek(timeMs);
-  }, [seek, state]);
+    const skipMs = 10 * 1000;
+    const previous = audioInstance.currentTime * 1000 - skipMs;
+    seek(previous < 0 ? 0 : previous);
+  }, [seek, audioInstance]);
 
   const setSpeed = useCallback(
     (playBackRate: string) => {
